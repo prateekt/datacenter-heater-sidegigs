@@ -289,7 +289,7 @@ If this heat powers DAC on today's U.S. grid: **~37,776 tonnes CO₂e/yr** net r
 
 ### Secondary heat applications — pools, fisheries, showers, community heat
 
-The same **~34 MW** waste-heat stream can be routed to **DAC**, **heated pools**, **aquaculture raceways**, **algae**, or **shelter hot showers** (MVP: one path at a time). Metrics translate delivered MWh into real-world equivalents (olympic pool ~180 MWh/yr; shelter hot shower ~2.5 kWh; U.S. home ~8 MWh/yr heat).
+The same **~34 MW** waste-heat stream can be routed to **DAC**, **heated pools**, **aquaculture raceways**, **algae**, or **shelter hot showers** (MVP: **one valve path at a time** — robot `priority` in each YAML). **Routed MWh** comes from the simulator; **pools / fisheries / algae lines are zero** when that load is not in the priority list (e.g. `nvidia_us_expansion.yaml` sends everything to DAC). **Homes** and **hot showers** are *hypothetical redirects* of the same total MWh — not simultaneous loads.
 
 | Priority scenario | Heat (MWh/yr) | Hot showers/yr | Net CO₂e (t/yr, grid) | Olympic pools | Raceways | Homes equiv. |
 |-------------------|---------------|----------------|------------------------|---------------|----------|-------------|
@@ -297,14 +297,14 @@ The same **~34 MW** waste-heat stream can be routed to **DAC**, **heated pools**
 | Community heat (pools + fisheries) | **6,510** | **2.6M** | 1,721 | 0.5 | 0.4 | 814 |
 | Algae + DAC balanced | **9,894** | **4.0M** | 3,623 | 0.0 | 0.0 | 1,237 |
 
-*Hot showers: dignified **8-min shelter/mobile unit** shower (~60 L warmed to 42°C, ~2.5 kWh each). Illustrates community heat potential — not a modeled load in the simulator yet.*
+*Hot showers / homes: **hypothetical redirect** of total MWh (~2.5 kWh/shower; ~8 MWh/home-yr). Olympic pools and raceways count only when pool/aquaculture are in robot priority.*
 
 
 **Trade-off (community vs. DAC priority):** ~36,055 fewer tonnes CO₂e removed per year, but **201 MWh/yr** to pools/fisheries and **~814 homes** heat equivalent — a campus **amenity + food + district heat** story alongside partial climate clawback.
 
-- **DAC priority (climate)** — **37,776 tonnes CO₂e/yr** net. Heat delivered: **70,918 MWh/yr** total (pools **0** · fisheries **0** · algae **0** · DAC **70,918**). ≈ **0.0 olympic pools**, **0.0 raceways** (500 m³), **~0 kg fish/yr** potential, **1.7 ha** algae, **~8,865 homes** heat equivalent, **~28.4 million shelter hot showers/yr (~77,718/day)**.
-- **Community heat (pools + fisheries)** — **1,721 tonnes CO₂e/yr** net. Heat delivered: **6,510 MWh/yr** total (pools **97** · fisheries **104** · algae **3,409** · DAC **2,900**). ≈ **0.5 olympic pools**, **0.4 raceways** (500 m³), **~5,393 kg fish/yr** potential, **1.7 ha** algae, **~814 homes** heat equivalent, **~2.6 million shelter hot showers/yr (~7,134/day)**.
-- **Algae + DAC balanced** — **3,623 tonnes CO₂e/yr** net. Heat delivered: **9,894 MWh/yr** total (pools **0** · fisheries **0** · algae **3,683** · DAC **6,212**). ≈ **0.0 olympic pools**, **0.0 raceways** (500 m³), **~0 kg fish/yr** potential, **2.5 ha** algae, **~1,237 homes** heat equivalent, **~4.0 million shelter hot showers/yr (~10,843/day)**.
+- **DAC priority (climate)** — **37,776 tonnes CO₂e/yr** net. **Routed heat:** **70,918 MWh/yr** (pools **0** · fisheries **0** · algae **0** · DAC **70,918**). *Hypothetical redirect* (same MWh to community uses): **~8,865 homes** heat, **~28.4 million shelter hot showers/yr (~77,718/day)**.
+- **Community heat (pools + fisheries)** — **1,721 tonnes CO₂e/yr** net. **Routed heat:** **6,510 MWh/yr** (pools **97** · fisheries **104** · algae **3,409** · DAC **2,900**). Pool service: **0.5 olympic-pool equivalents** (2.2 community pools). Fisheries: **0.4 raceways** (500 m³), **~5,393 kg fish/yr** potential. Algae: **0.19 ha** thermal service (from **3,409 MWh/yr** to ponds). *Hypothetical redirect* (same MWh to community uses): **~814 homes** heat, **~2.6 million shelter hot showers/yr (~7,134/day)**.
+- **Algae + DAC balanced** — **3,623 tonnes CO₂e/yr** net. **Routed heat:** **9,894 MWh/yr** (pools **0** · fisheries **0** · algae **3,683** · DAC **6,212**). Algae: **0.21 ha** thermal service (from **3,683 MWh/yr** to ponds). *Hypothetical redirect* (same MWh to community uses): **~1,237 homes** heat, **~4.0 million shelter hot showers/yr (~10,843/day)**.
 
 ### Results at a glance
 
@@ -462,7 +462,7 @@ As the U.S. grid decarbonizes, **GPU operational CO₂ falls** but **waste heat 
 
 **Pools, fisheries, showers vs. DAC?** Same exhaust, different router priority — a **policy choice** about where to send thermal service before dissipation.
 
-### Generated at: 2026-06-05T10:41:43.968062Z
+### Generated at: 2026-06-05T10:42:57.914733Z
 
 ### Sources
 

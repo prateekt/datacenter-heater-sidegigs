@@ -37,6 +37,7 @@ public final class HeatApplicationAnalyzer {
         double fishKgM3Yr = ConfigLoader.d(ConfigLoader.map(appsRoot, "aquaculture"), "fish_kg_per_m3_year", 25);
         double homeKwh = ConfigLoader.d(ConfigLoader.map(appsRoot, "district_heat"), "us_home_annual_heat_kwh", 8000);
         double showerKwh = ConfigLoader.d(ConfigLoader.map(appsRoot, "homeless_shelter_shower"), "kwh_per_shower", 2.5);
+        double haPerMwHeat = ConfigLoader.d(ConfigLoader.map(appsRoot, "algae_pond"), "hectares_per_mw_heat", 0.5);
         double racewayKwhPerYear = wPerM3 * racewayM3 * 8760.0 / 1000.0;
 
         for (Map<String, Object> sc : scenarios) {
@@ -68,6 +69,7 @@ public final class HeatApplicationAnalyzer {
             double netTonnes = metrics.climate().annualizedTonnesCo2e();
             double aquaRaceways = aquaMwh * 1000.0 / racewayKwhPerYear;
             double fishKg = aquaRaceways * racewayM3 * fishKgM3Yr;
+            double algaeHaFromHeat = (algaeMwh / 8760.0) * haPerMwHeat;
 
             results.add(new HeatApplicationPoint(
                     id,
@@ -82,7 +84,7 @@ public final class HeatApplicationAnalyzer {
                     poolMwh * 1000.0 / communityPoolKwh,
                     aquaRaceways,
                     fishKg,
-                    sim.state.algae.surfaceAreaM2 / 10_000.0,
+                    algaeHaFromHeat,
                     totalMwh * 1000.0 / homeKwh,
                     totalMwh * 1000.0 / showerKwh,
                     metrics.poolSatisfactionPct()
@@ -104,16 +106,32 @@ public final class HeatApplicationAnalyzer {
     }
 
     public static String formatPoint(HeatApplicationPoint p) {
-        return String.format(Locale.US,
-                "**%s** — **%,.0f tonnes CO₂e/yr** net. Heat delivered: **%,.0f MWh/yr** total "
-                        + "(pools **%,.0f** · fisheries **%,.0f** · algae **%,.0f** · DAC **%,.0f**). "
-                        + "≈ **%.1f olympic pools**, **%.1f raceways** (500 m³), **~%,.0f kg fish/yr** potential, "
-                        + "**%.1f ha** algae, **~%,.0f homes** heat equivalent, **%s**.",
+        StringBuilder sb = new StringBuilder();
+        sb.append(String.format(Locale.US,
+                "**%s** — **%,.0f tonnes CO₂e/yr** net. **Routed heat:** **%,.0f MWh/yr** "
+                        + "(pools **%,.0f** · fisheries **%,.0f** · algae **%,.0f** · DAC **%,.0f**).",
                 p.label(), p.netCo2eTonnesPerYear(), p.heatTotalMwh(),
-                p.heatPoolMwh(), p.heatAquacultureMwh(), p.heatAlgaeMwh(), p.heatDacMwh(),
-                p.olympicPoolsEquivalent(), p.aquacultureRacewaysEquivalent(), p.fishProductionKgPerYear(),
-                p.algaeHectaresEquivalent(), p.homesHeatedEquivalent(),
-                formatHotShowers(p.hotShowersEquivalent()));
+                p.heatPoolMwh(), p.heatAquacultureMwh(), p.heatAlgaeMwh(), p.heatDacMwh()));
+
+        if (p.heatPoolMwh() > 0.5) {
+            sb.append(String.format(Locale.US,
+                    " Pool service: **%.1f olympic-pool equivalents** (%.1f community pools).",
+                    p.olympicPoolsEquivalent(), p.communityPoolsEquivalent()));
+        }
+        if (p.heatAquacultureMwh() > 0.5) {
+            sb.append(String.format(Locale.US,
+                    " Fisheries: **%.1f raceways** (500 m³), **~%,.0f kg fish/yr** potential.",
+                    p.aquacultureRacewaysEquivalent(), p.fishProductionKgPerYear()));
+        }
+        if (p.heatAlgaeMwh() > 0.5) {
+            sb.append(String.format(Locale.US,
+                    " Algae: **%.2f ha** thermal service (from **%,.0f MWh/yr** to ponds).",
+                    p.algaeHectaresEquivalent(), p.heatAlgaeMwh()));
+        }
+        sb.append(String.format(Locale.US,
+                " *Hypothetical redirect* (same MWh to community uses): **~%,.0f homes** heat, **%s**.",
+                p.homesHeatedEquivalent(), formatHotShowers(p.hotShowersEquivalent())));
+        return sb.toString();
     }
 
     public static String formatHotShowers(double showersPerYear) {

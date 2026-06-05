@@ -595,8 +595,10 @@ public final class TemplateExplainer {
         sb.append("<a id=\"secondary-heat-applications\"></a>\n\n");
         sb.append("### Secondary heat applications — pools, fisheries, showers, community heat\n\n");
         sb.append("The same **~34 MW** waste-heat stream can be routed to **DAC**, **heated pools**, **aquaculture raceways**, **algae**, or **shelter hot showers** ")
-                .append("(MVP: one path at a time). Metrics translate delivered MWh into real-world equivalents ")
-                .append("(olympic pool ~180 MWh/yr; shelter hot shower ~2.5 kWh; U.S. home ~8 MWh/yr heat).\n\n");
+                .append("(MVP: **one valve path at a time** — robot `priority` in each YAML). ")
+                .append("**Routed MWh** comes from the simulator; **pools / fisheries / algae lines are zero** when that load is not in the priority list ")
+                .append("(e.g. `nvidia_us_expansion.yaml` sends everything to DAC). ")
+                .append("**Homes** and **hot showers** are *hypothetical redirects* of the same total MWh — not simultaneous loads.\n\n");
 
         sb.append("| Priority scenario | Heat (MWh/yr) | Hot showers/yr | Net CO₂e (t/yr, grid) | Olympic pools | Raceways | Homes equiv. |\n");
         sb.append("|-------------------|---------------|----------------|------------------------|---------------|----------|-------------|\n");
@@ -609,8 +611,8 @@ public final class TemplateExplainer {
                     p.olympicPoolsEquivalent(), p.aquacultureRacewaysEquivalent(),
                     p.homesHeatedEquivalent()));
         }
-        sb.append("\n*Hot showers: dignified **8-min shelter/mobile unit** shower (~60 L warmed to 42°C, ~2.5 kWh each). "
-                + "Illustrates community heat potential — not a modeled load in the simulator yet.*\n\n");
+        sb.append("\n*Hot showers / homes: **hypothetical redirect** of total MWh (~2.5 kWh/shower; ~8 MWh/home-yr). ")
+                .append("Olympic pools and raceways count only when pool/aquaculture are in robot priority.*\n\n");
         sb.append("\n");
 
         HeatApplicationPoint dac = apps.stream().filter(a -> "dac_priority".equals(a.scenarioId())).findFirst().orElse(null);
