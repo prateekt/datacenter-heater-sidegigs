@@ -80,7 +80,7 @@ A **robotic controller** in our simulation decides *where* to send the heat: car
 
 ## What we found (NVIDIA U.S.)
 
-We ran the simulator for **one liquid-cooled U.S. AI hall** (~**25,000 GPUs**, ~34 MW waste heat on B200 liquid, DAC priority). Charts report **tonnes CO₂e/year**; prose adds scale analogies (agriculture, transport, **% operational recovery**). See [Scalability](#scalability-charts).
+We ran the simulator for **one liquid-cooled U.S. AI hall** (~**25,000 GPUs**, ~34 MW waste heat on B200 liquid, DAC priority). Charts report **tonnes CO₂e/year**; prose adds scale analogies (agriculture, transport, **% operational recovery**, and **secondary heat** — olympic pools, aquaculture raceways, homes heated). See [Scalability](#scalability-charts).
 
 **Full scalability analysis** — GPU counts, generation comparisons, campus rollout, and charts — is in [Scalability: GPUs, heat, and CO₂](#scalability-charts) below. Those numbers are **auto-generated** when you run `./gradlew generateFigures`.
 
@@ -235,6 +235,22 @@ For NVIDIA-scale infrastructure, compare DAC removal to **CO₂ from powering th
 
 **Strategic framing for NVIDIA:** Waste-heat DAC is **colocated carbon clawback** on heat already paid for — ~one quarter of operational CO₂ today, rising if grid greens and DAC scales with Blackwell/Rubin thermals. Not a license to build; a way to **extract value from unavoidable exhaust**.
 
+### Secondary heat applications — pools, fisheries, community heat
+
+The same **~34 MW** waste-heat stream can be routed to **DAC**, **heated pools**, **aquaculture raceways**, or **algae** (MVP: one path at a time). Metrics translate delivered MWh into real-world equivalents (olympic pool ~180 MWh/yr; community pool ~45 MWh/yr; 500 m³ raceway ~241 MWh/yr maintenance; U.S. home ~8 MWh/yr heat).
+
+| Priority scenario | Net CO₂e (t/yr) | Heat delivered (MWh/yr) | Olympic pools | Raceways (500 m³) | Fish potential (kg/yr) | Homes equiv. |
+|-------------------|-----------------|---------------------------|---------------|-------------------|--------------------------|-------------|
+| DAC priority (climate) | **37,776** | 70,918 | 0.0 | 0.0 | 0 | 8,865 |
+| Community heat (pools + fisheries) | **1,721** | 6,510 | 0.5 | 0.4 | 5,393 | 814 |
+| Algae + DAC balanced | **3,623** | 9,894 | 0.0 | 0.0 | 0 | 1,237 |
+
+**Trade-off (community vs. DAC priority):** ~36,055 fewer tonnes CO₂e removed per year, but **201 MWh/yr** to pools/fisheries and **~814 homes** heat equivalent — a campus **amenity + food + district heat** story alongside partial climate clawback.
+
+- **DAC priority (climate)** — **37,776 tonnes CO₂e/yr** net. Heat delivered: **70,918 MWh/yr** total (pools **0** · fisheries **0** · algae **0** · DAC **70,918**). ≈ **0.0 olympic pools**, **0.0 raceways** (500 m³), **~0 kg fish/yr** potential, **1.7 ha** algae, **~8,865 homes** heat equivalent.
+- **Community heat (pools + fisheries)** — **1,721 tonnes CO₂e/yr** net. Heat delivered: **6,510 MWh/yr** total (pools **97** · fisheries **104** · algae **3,409** · DAC **2,900**). ≈ **0.5 olympic pools**, **0.4 raceways** (500 m³), **~5,393 kg fish/yr** potential, **1.7 ha** algae, **~814 homes** heat equivalent.
+- **Algae + DAC balanced** — **3,623 tonnes CO₂e/yr** net. Heat delivered: **9,894 MWh/yr** total (pools **0** · fisheries **0** · algae **3,683** · DAC **6,212**). ≈ **0.0 olympic pools**, **0.0 raceways** (500 m³), **~0 kg fish/yr** potential, **2.5 ha** algae, **~1,237 homes** heat equivalent.
+
 ### Results at a glance
 
 | Scenario | GPUs | Chip | Halls | **Net CO₂e (t/yr)** | Scale intuition |
@@ -267,7 +283,9 @@ For NVIDIA-scale infrastructure, compare DAC removal to **CO₂ from powering th
 
 **NVIDIA-specific takeaway:** Blackwell and Rubin halls run hotter → **more DAC potential per hall** if capture plant scales with silicon. Saturation chart shows **DAC capex must track heat**.
 
-### Generated at: 2026-06-05T09:19:25.683971Z
+**Pools and fisheries vs. DAC?** Same waste heat, different router priority. Community scenarios trade some CO₂ removal for **pools, raceway aquaculture, and district-heat equivalents** — see Secondary heat applications above.
+
+### Generated at: 2026-06-05T09:22:20.278772Z
 
 ### Sources
 

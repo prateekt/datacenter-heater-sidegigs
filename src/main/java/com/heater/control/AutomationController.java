@@ -69,6 +69,14 @@ public final class AutomationController {
                 ccsValve = false;
                 algaeValve = false;
             }
+            case AQUACULTURE -> {
+                secondaryPid.setSetpoint(state.aquaculture.setpoint);
+                secondarySpeed = secondaryPid.update(state.aquaculture.temperature, dt);
+                poolValve = true;
+                houseValve = false;
+                ccsValve = false;
+                algaeValve = false;
+            }
             case HOUSE -> {
                 secondaryPid.setSetpoint(state.house.setpoint);
                 secondarySpeed = secondaryPid.update(state.house.temperature, dt);
@@ -129,7 +137,7 @@ public final class AutomationController {
     }
 
     private static boolean anyLoadConnected(SystemState state) {
-        return state.pool.connected || state.house.connected
+        return state.pool.connected || state.aquaculture.connected || state.house.connected
                 || state.carbonCapture.connected || state.algae.connected;
     }
 }

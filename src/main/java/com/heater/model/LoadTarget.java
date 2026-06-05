@@ -6,6 +6,7 @@ public enum LoadTarget {
     CARBON_CAPTURE,
     ALGAE,
     POOL,
+    AQUACULTURE,
     BUFFER;
 
     public static LoadTarget fromString(String value) {
@@ -17,6 +18,7 @@ public enum LoadTarget {
             case "carbon_capture" -> CARBON_CAPTURE;
             case "algae" -> ALGAE;
             case "pool" -> POOL;
+            case "aquaculture", "fishery", "fisheries" -> AQUACULTURE;
             case "buffer" -> BUFFER;
             case "none" -> NONE;
             default -> NONE;

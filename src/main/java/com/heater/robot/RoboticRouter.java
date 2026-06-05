@@ -47,6 +47,8 @@ public final class RoboticRouter {
                 simTime,
                 system.pool.temperature,
                 system.pool.setpoint,
+                system.aquaculture.temperature,
+                system.aquaculture.setpoint,
                 system.house.temperature,
                 system.house.setpoint,
                 system.buffer.temperature,
@@ -136,6 +138,7 @@ public final class RoboticRouter {
 
     public void applyToSystem(SystemState system) {
         system.pool.connected = connectedLoad == LoadTarget.POOL;
+        system.aquaculture.connected = connectedLoad == LoadTarget.AQUACULTURE;
         system.house.connected = connectedLoad == LoadTarget.HOUSE;
         system.carbonCapture.connected = connectedLoad == LoadTarget.CARBON_CAPTURE;
         system.algae.connected = connectedLoad == LoadTarget.ALGAE;

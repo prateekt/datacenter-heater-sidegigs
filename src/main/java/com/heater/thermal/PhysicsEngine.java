@@ -40,8 +40,9 @@ public final class PhysicsEngine {
         state.hx.tSecondaryOut = hx.tSecondaryOut();
 
         updateBuffer(state, hx.qTransferW(), mdotSec, cp, dt);
-        updatePool(state, actuators, cp, dt);
-        updateHouse(state, actuators, cp, dt);
+        double qPool = updatePool(state, actuators, cp, dt);
+        double qAqua = updateAquaculture(state, actuators, cp, dt);
+        double qHouse = updateHouse(state, actuators, cp, dt);
         AlgaeGrowthModel.updateThermal(state.algae, state.ambientTemp, actuators, cp, dt);
 
         double dacRateBefore = state.carbonCapture.currentCaptureRateKgS;
@@ -62,21 +63,21 @@ public final class PhysicsEngine {
                 dt
         );
 
-        double qDelivered = 0.0;
-        if (state.pool.connected && actuators.poolValveOpen && mdotSec > 0) {
-            qDelivered += hx.qTransferW() * (state.house.connected ? 0.5 : 0.7);
-        }
-        if (state.house.connected && actuators.houseValveOpen && mdotSec > 0) {
-            qDelivered += hx.qTransferW() * (state.pool.connected ? 0.5 : 0.7);
-        }
-        if (state.carbonCapture.connected && actuators.ccsValveOpen && mdotSec > 0) {
-            qDelivered += capture.qSourceDrawW();
-        }
+        double qAlgae = 0.0;
         if (state.algae.connected && actuators.algaeValveOpen && mdotSec > 0) {
-            qDelivered += mdotSec * 0.35 * cp * Math.max(0.0, state.algae.optimalTemp - state.algae.temperature);
+            qAlgae = mdotSec * 0.35 * cp * Math.max(0.0, state.algae.optimalTemp - state.algae.temperature);
         }
-        qDelivered = Math.min(qDelivered, hx.qTransferW() + capture.qSourceDrawW());
+        double qDac = state.carbonCapture.connected && actuators.ccsValveOpen && mdotSec > 0
+                ? capture.qSourceDrawW() : 0.0;
 
+        state.energyPoolJ += qPool * dt;
+        state.energyAquacultureJ += qAqua * dt;
+        state.energyHouseJ += qHouse * dt;
+        state.energyAlgaeJ += qAlgae * dt;
+        state.energyDacJ += qDac * dt;
+
+        double qDelivered = qPool + qAqua + qHouse + qAlgae + qDac;
+        qDelivered = Math.min(qDelivered, hx.qTransferW() + capture.qSourceDrawW());
         state.energyRecoveredJ += qDelivered * dt;
         state.energyRejectedJ += qReject * dt;
 
@@ -102,7 +103,7 @@ public final class PhysicsEngine {
         }
     }
 
-    private void updatePool(SystemState state, ActuatorState actuators, double cp, double dt) {
+    private double updatePool(SystemState state, ActuatorState actuators, double cp, double dt) {
         var pool = state.pool;
         double qLoss = pool.lossUa * (pool.temperature - state.ambientTemp);
         double qGain = 0.0;
@@ -111,9 +112,22 @@ public final class PhysicsEngine {
                     * Math.max(0.0, pool.setpoint - pool.temperature);
         }
         pool.temperature += (qGain - qLoss) * dt / (pool.volume * cp);
+        return qGain;
     }
 
-    private void updateHouse(SystemState state, ActuatorState actuators, double cp, double dt) {
+    private double updateAquaculture(SystemState state, ActuatorState actuators, double cp, double dt) {
+        var aqua = state.aquaculture;
+        double qLoss = aqua.lossUa * (aqua.temperature - state.ambientTemp);
+        double qGain = 0.0;
+        if (aqua.connected && actuators.poolValveOpen && actuators.secondaryFlowKgS > 0) {
+            qGain = actuators.secondaryFlowKgS * 0.35 * cp
+                    * Math.max(0.0, aqua.setpoint - aqua.temperature);
+        }
+        aqua.temperature += (qGain - qLoss) * dt / (aqua.volume * cp);
+        return qGain;
+    }
+
+    private double updateHouse(SystemState state, ActuatorState actuators, double cp, double dt) {
         var house = state.house;
         double qLoss = house.lossUa * (house.temperature - state.ambientTemp);
         double qGain = 0.0;
@@ -123,5 +137,6 @@ public final class PhysicsEngine {
         }
         double thermalMassJK = house.thermalMass * 1000.0;
         house.temperature += (qGain - qLoss) * dt / thermalMassJK;
+        return qGain;
     }
 }

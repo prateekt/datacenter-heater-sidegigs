@@ -1,4 +1,5 @@
 base_config: config/nvidia_us_expansion.yaml
+heat_applications_config: ""
 gpu_profiles: config/gpu_profiles.yaml
 scenario_name: nvidia_us_module
 sim_duration_s: 3600

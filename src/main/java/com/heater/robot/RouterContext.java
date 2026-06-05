@@ -4,6 +4,8 @@ public record RouterContext(
         double simTime,
         double poolTemp,
         double poolSetpoint,
+        double aquacultureTemp,
+        double aquacultureSetpoint,
         double houseTemp,
         double houseSetpoint,
         double bufferTemp,

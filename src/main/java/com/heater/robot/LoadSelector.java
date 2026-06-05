@@ -30,6 +30,7 @@ public final class LoadSelector {
                     && (ctx.algaeTemp() < ctx.algaeOptimalTemp() - th.algaeTempDelta()
                     || ctx.algaeTemp() <= ctx.algaeOptimalTemp() + th.algaeTempDelta());
             case POOL -> ctx.poolTemp() < ctx.poolSetpoint() - th.poolTempDelta();
+            case AQUACULTURE -> ctx.aquacultureTemp() < ctx.aquacultureSetpoint() - th.poolTempDelta();
             case BUFFER -> ctx.bufferTemp() < th.bufferChargeBelow();
             default -> false;
         };

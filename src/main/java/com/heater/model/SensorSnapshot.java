@@ -19,6 +19,7 @@ public record SensorSnapshot(
 ) {
     public static SensorSnapshot fromSystem(SystemState state, RouterState robotState) {
         boolean loadConnected = state.pool.connected
+                || state.aquaculture.connected
                 || state.house.connected
                 || state.carbonCapture.connected
                 || state.algae.connected;

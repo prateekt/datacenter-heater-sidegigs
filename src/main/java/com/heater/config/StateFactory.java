@@ -37,6 +37,14 @@ public final class StateFactory {
         s.pool.setpoint = ConfigLoader.d(pool, "setpoint", 28.0);
         s.pool.lossUa = ConfigLoader.d(pool, "loss_ua", 800.0);
 
+        Map<String, Object> aqua = ConfigLoader.map(loads, "aquaculture");
+        if (!aqua.isEmpty()) {
+            s.aquaculture.volume = ConfigLoader.d(aqua, "volume_m3", 50_000.0);
+            s.aquaculture.temperature = ConfigLoader.d(aqua, "initial_temp", 18.0);
+            s.aquaculture.setpoint = ConfigLoader.d(aqua, "setpoint", 22.0);
+            s.aquaculture.lossUa = ConfigLoader.d(aqua, "loss_ua", 2500.0);
+        }
+
         Map<String, Object> house = ConfigLoader.map(loads, "house");
         s.house.thermalMass = ConfigLoader.d(house, "thermal_mass", 50_000.0);
         s.house.temperature = ConfigLoader.d(house, "initial_temp", 18.0);

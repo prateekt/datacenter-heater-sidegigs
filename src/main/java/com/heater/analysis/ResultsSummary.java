@@ -10,6 +10,7 @@ public final class ResultsSummary {
 
     private final String generatedAt;
     private final List<SweepPoint> points = new ArrayList<>();
+    private final List<HeatApplicationPoint> applications = new ArrayList<>();
     private final List<String> chartPaths = new ArrayList<>();
     private final Map<String, Object> metadata = new LinkedHashMap<>();
 
@@ -19,6 +20,14 @@ public final class ResultsSummary {
 
     public void addPoint(SweepPoint point) {
         points.add(point);
+    }
+
+    public void addApplication(HeatApplicationPoint point) {
+        applications.add(point);
+    }
+
+    public List<HeatApplicationPoint> applications() {
+        return List.copyOf(applications);
     }
 
     public void addChart(String path) {
@@ -56,6 +65,12 @@ public final class ResultsSummary {
             sb.append(jsonString(chartPaths.get(i)));
         }
         sb.append("],\n");
+        sb.append("  \"applications\": [\n");
+        for (int i = 0; i < applications.size(); i++) {
+            if (i > 0) sb.append(",\n");
+            sb.append(appToJson(applications.get(i)));
+        }
+        sb.append("\n  ],\n");
         sb.append("  \"points\": [\n");
         for (int i = 0; i < points.size(); i++) {
             if (i > 0) sb.append(",\n");
@@ -63,6 +78,20 @@ public final class ResultsSummary {
         }
         sb.append("\n  ]\n}");
         return sb.toString();
+    }
+
+    private static String appToJson(HeatApplicationPoint p) {
+        return "    {" +
+                "\"scenario_id\":" + jsonString(p.scenarioId()) + "," +
+                "\"label\":" + jsonString(p.label()) + "," +
+                "\"net_co2e_tonnes_per_year\":" + fmt(p.netCo2eTonnesPerYear()) + "," +
+                "\"heat_pool_mwh\":" + fmt(p.heatPoolMwh()) + "," +
+                "\"heat_aquaculture_mwh\":" + fmt(p.heatAquacultureMwh()) + "," +
+                "\"heat_total_mwh\":" + fmt(p.heatTotalMwh()) + "," +
+                "\"olympic_pools_equiv\":" + fmt(p.olympicPoolsEquivalent()) + "," +
+                "\"aquaculture_raceways_equiv\":" + fmt(p.aquacultureRacewaysEquivalent()) + "," +
+                "\"fish_kg_per_year\":" + fmt(p.fishProductionKgPerYear()) +
+                "}";
     }
 
     private static String pointToJson(SweepPoint p) {

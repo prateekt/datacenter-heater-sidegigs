@@ -73,6 +73,7 @@ public final class TemplateExplainer {
         appendGpuTimelineSection(sb);
 
         appendWorthItSection(sb, summary, scale, registry);
+        appendHeatApplicationsSection(sb, summary);
 
         sb.append("### Results at a glance\n\n");
         sb.append("| Scenario | GPUs | Chip | Halls | **Net CO₂e (t/yr)** | Scale intuition |\n");
@@ -95,6 +96,7 @@ public final class TemplateExplainer {
         sb.append("**Does a greener grid hurt this story?** GPU **operational** CO₂ drops; **waste heat** does not. DAC becomes *more* valuable per MWh of heat, but heat-pump electricity penalty also shrinks.\n\n");
         sb.append("**Agriculture comparison — serious or gimmick?** USDA cover-crop programs sequester **~0.3–0.8 t CO₂e/acre/year**. Our reference hall matches **~75,000 acres** of high-performing cover crop — real land programs, not a substitute for cutting GPU power.\n\n");
         sb.append("**NVIDIA-specific takeaway:** Blackwell and Rubin halls run hotter → **more DAC potential per hall** if capture plant scales with silicon. Saturation chart shows **DAC capex must track heat**.\n\n");
+        sb.append("**Pools and fisheries vs. DAC?** Same waste heat, different router priority. Community scenarios trade some CO₂ removal for **pools, raceway aquaculture, and district-heat equivalents** — see Secondary heat applications above.\n\n");
 
         sb.append("### Generated at: ").append(summary.generatedAt()).append("\n\n");
         sb.append("### Sources\n\n");
@@ -258,5 +260,43 @@ public final class TemplateExplainer {
     private static SweepPoint findPoint(ResultsSummary summary, String sweepId, int key) {
         return summary.bySweep(sweepId).stream()
                 .filter(p -> p.gpuCount() == key || p.halls() == key).findFirst().orElse(null);
+    }
+
+    private static void appendHeatApplicationsSection(StringBuilder sb, ResultsSummary summary) {
+        List<HeatApplicationPoint> apps = summary.applications();
+        if (apps.isEmpty()) return;
+
+        sb.append("### Secondary heat applications — pools, fisheries, community heat\n\n");
+        sb.append("The same **~34 MW** waste-heat stream can be routed to **DAC**, **heated pools**, **aquaculture raceways**, or **algae** ")
+                .append("(MVP: one path at a time). Metrics translate delivered MWh into real-world equivalents ")
+                .append("(olympic pool ~180 MWh/yr; community pool ~45 MWh/yr; 500 m³ raceway ~241 MWh/yr maintenance; U.S. home ~8 MWh/yr heat).\n\n");
+
+        sb.append("| Priority scenario | Net CO₂e (t/yr) | Heat delivered (MWh/yr) | Olympic pools | Raceways (500 m³) | Fish potential (kg/yr) | Homes equiv. |\n");
+        sb.append("|-------------------|-----------------|---------------------------|---------------|-------------------|--------------------------|-------------|\n");
+        for (HeatApplicationPoint p : apps) {
+            sb.append(String.format(Locale.US,
+                    "| %s | **%,.0f** | %,.0f | %.1f | %.1f | %,.0f | %,.0f |\n",
+                    p.label(), p.netCo2eTonnesPerYear(), p.heatTotalMwh(),
+                    p.olympicPoolsEquivalent(), p.aquacultureRacewaysEquivalent(),
+                    p.fishProductionKgPerYear(), p.homesHeatedEquivalent()));
+        }
+        sb.append("\n");
+
+        HeatApplicationPoint dac = apps.stream().filter(a -> "dac_priority".equals(a.scenarioId())).findFirst().orElse(null);
+        HeatApplicationPoint community = apps.stream().filter(a -> "community_heat".equals(a.scenarioId())).findFirst().orElse(null);
+        if (dac != null && community != null) {
+            double co2Trade = dac.netCo2eTonnesPerYear() - community.netCo2eTonnesPerYear();
+            sb.append(String.format(Locale.US,
+                    "**Trade-off (community vs. DAC priority):** ~%,.0f fewer tonnes CO₂e removed per year, "
+                            + "but **%,.0f MWh/yr** to pools/fisheries and **~%,.0f homes** heat equivalent — "
+                            + "a campus **amenity + food + district heat** story alongside partial climate clawback.\n\n",
+                    co2Trade, community.heatPoolMwh() + community.heatAquacultureMwh(),
+                    community.homesHeatedEquivalent()));
+        }
+
+        for (HeatApplicationPoint p : apps) {
+            sb.append("- ").append(HeatApplicationAnalyzer.formatPoint(p)).append("\n");
+        }
+        sb.append("\n");
     }
 }

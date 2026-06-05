@@ -31,7 +31,7 @@ public final class SweepRunner {
         return sweepConfig;
     }
 
-    public ResultsSummary runAll() {
+    public ResultsSummary runAll() throws IOException {
         ResultsSummary summary = new ResultsSummary();
         summary.putMetadata("sim_duration_s", simDurationS);
         summary.putMetadata("reference_profile_id", registry.referenceProfileId());
@@ -43,7 +43,17 @@ public final class SweepRunner {
         runSaturation(summary, ConfigLoader.map(sweeps, "saturation"));
         runMultiHall(summary, ConfigLoader.map(sweeps, "multi_hall"));
         runForecastTimeline(summary, sweeps.get("forecast_timeline"));
+        runHeatApplications(summary);
         return summary;
+    }
+
+    private void runHeatApplications(ResultsSummary summary) throws IOException {
+        String appsPath = sweepConfig.getOrDefault("heat_applications_config", "config/heat_applications.yaml").toString();
+        if (appsPath.isBlank()) return;
+        String basePath = sweepConfig.getOrDefault("base_config", "config/nvidia_us_expansion.yaml").toString();
+        for (HeatApplicationPoint p : HeatApplicationAnalyzer.analyzeAll(appsPath, basePath, registry, simDurationS)) {
+            summary.addApplication(p);
+        }
     }
 
     private void runGpuCountRamp(ResultsSummary summary, Map<String, Object> cfg) {

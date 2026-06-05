@@ -137,6 +137,7 @@ public final class Simulator {
     private double setpointForTarget(LoadTarget target) {
         return switch (target) {
             case POOL -> state.pool.setpoint;
+            case AQUACULTURE -> state.aquaculture.setpoint;
             case HOUSE -> state.house.setpoint;
             case BUFFER -> state.buffer.temperature + 5.0;
             case CARBON_CAPTURE -> state.carbonCapture.regenerationTemp;

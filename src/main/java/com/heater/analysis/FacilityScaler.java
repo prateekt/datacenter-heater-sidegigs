@@ -111,6 +111,8 @@ public final class FacilityScaler {
         scaleNested(config, "loads", "algae", "surface_area_m2", scale);
         scaleNested(config, "loads", "algae", "volume_m3", scale);
         scaleNested(config, "loads", "algae", "loss_ua", scale);
+        scaleNested(config, "loads", "aquaculture", "volume_m3", scale);
+        scaleNested(config, "loads", "pool", "volume", scale);
         scaleMap(config, "control", "max_secondary_flow", scale);
     }
 

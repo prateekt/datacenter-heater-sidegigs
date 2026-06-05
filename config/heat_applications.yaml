@@ -1,0 +1,39 @@
+# Reference sizes for secondary waste-heat applications (metrics only).
+# Used to translate delivered kWh into pools, fisheries, homes, etc.
+
+olympic_pool:
+  volume_m3: 2500
+  annual_heat_kwh: 180000
+  source: "Order-of-magnitude outdoor competition pool heating (SW U.S.)"
+
+community_pool:
+  volume_m3: 2000
+  annual_heat_kwh: 45000
+  source: "Municipal / hotel pool ~2 ML"
+
+aquaculture:
+  raceway_volume_m3: 500
+  setpoint_c: 22.0
+  maintenance_w_per_m3: 55
+  source: "Tilapia/trout raceway — ~50–60 W/m³ to hold temp in desert colocation"
+  fish_kg_per_m3_year: 25
+  source_fish: "USDA aquaculture productivity mid-range intensive raceway"
+
+district_heat:
+  us_home_annual_heat_kwh: 8000
+  source: "EIA — average U.S. home space-heating energy ~6–10 MWh/yr"
+
+algae_pond:
+  hectares_per_mw_heat: 0.5
+  source: "Rough PBR sizing — ~0.5 ha algae pond per MW thermal service"
+
+application_scenarios:
+  - id: dac_priority
+    label: "DAC priority (climate)"
+    config: config/nvidia_us_expansion.yaml
+  - id: community_heat
+    label: "Community heat (pools + fisheries)"
+    config: config/nvidia_us_community.yaml
+  - id: algae_dac_balanced
+    label: "Algae + DAC balanced"
+    config: config/nvidia_us_algae.yaml
