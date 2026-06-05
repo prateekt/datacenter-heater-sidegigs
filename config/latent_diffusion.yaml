@@ -1,0 +1,16 @@
+# Java-native latent diffusion (fan-noise → ambient music task)
+latent_diffusion:
+  enabled: true
+  latent_dim: 64
+  hidden_dim: 128
+  diffusion_steps: 30
+  training_epochs: 40
+  learning_rate: 0.002
+  batch_size: 8
+  corpus_size: 32
+  sample_rate_hz: 44100
+  clip_duration_s: 2.0
+  default_prompt: "gentle acoustic piano 60 BPM calm fence-line soundscape"
+  weights_path: models/score_network.bin
+  beta_start: 0.0001
+  beta_end: 0.02

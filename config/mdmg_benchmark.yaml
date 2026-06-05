@@ -1,0 +1,9 @@
+# MDMG SOTA benchmark settings
+mdmg_benchmark:
+  spectrum_config: config/acoustic_spectrum.yaml
+  diffusion_config: config/mechanical_diffusion.yaml
+  latent_diffusion_config: config/latent_diffusion.yaml
+  landscape_config: config/mdmg_landscape.yaml
+  prompt: "gentle acoustic piano 60 BPM calm fence-line soundscape"
+  output_dir: docs/audio
+  results_json: docs/mdmg_benchmark.json

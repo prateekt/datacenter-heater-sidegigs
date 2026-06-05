@@ -59,3 +59,27 @@ tasks.register<JavaExec>("generateAcousticFigures") {
     mainClass.set("com.heater.analysis.AcousticFigureMain")
     workingDir = projectDir
 }
+
+tasks.register<JavaExec>("trainLatentDiffusion") {
+    group = "documentation"
+    description = "Train Java-native latent diffusion score network"
+    classpath = sourceSets.main.get().runtimeClasspath
+    mainClass.set("com.heater.analysis.LatentDiffusionTrainMain")
+    workingDir = projectDir
+}
+
+tasks.register<JavaExec>("trainMdmgLandscape") {
+    group = "documentation"
+    description = "Distill Java-LDM score into mechanical landscape K"
+    classpath = sourceSets.main.get().runtimeClasspath
+    mainClass.set("com.heater.analysis.MdmgLandscapeTrainMain")
+    workingDir = projectDir
+}
+
+tasks.register<JavaExec>("generateMdmgBenchmark") {
+    group = "documentation"
+    description = "Run MDMG SOTA benchmark, WAV outputs, and patch README"
+    classpath = sourceSets.main.get().runtimeClasspath
+    mainClass.set("com.heater.analysis.MdmgBenchmarkMain")
+    workingDir = projectDir
+}

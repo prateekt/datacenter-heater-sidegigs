@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-05T18:07:24.803819Z",
+  "generated_at": "2026-06-05T18:34:02.827198Z",
   "charts": ["docs/figures/acoustic_spl_vs_liner_depth.png", "docs/figures/acoustic_sqi_vs_water_flow.png", "docs/figures/acoustic_mdmg_vs_steps.png", "docs/figures/acoustic_coupling_comparison.png"],
   "audio": ["docs/audio/fan_noise_baseline.wav", "docs/audio/mse_perimeter_decoupled.wav", "docs/audio/mse_perimeter_coupled.wav", "docs/audio/mdmg_output.wav"],
   "reference_runs": {"baseline_dba":78.8484,"mse_decoupled_dba":80.6249,"mse_coupled_dba":84.7965,"mdmg_spectral_distance":31.0387,"mdmg_harmonicity":0.9825,"mdmg_steps":40},

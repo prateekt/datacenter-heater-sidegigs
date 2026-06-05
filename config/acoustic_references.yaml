@@ -91,6 +91,42 @@ papers:
     key_numbers: "Tonal BPF and harmonics plus broadband turbulence shelf in ducted fans"
     vs_sim: "BPF = blades × RPM/60 underpins our tonal line spectrum."
 
+  - id: noise2music2023
+    authors: "Huang, R., et al."
+    year: 2023
+    title: "Noise2Music: Text-conditioned Music Generation with Diffusion Models"
+    venue: "arXiv"
+    arxiv_id: "2302.03917"
+    doi: ""
+    url: "https://arxiv.org/abs/2302.03917"
+    category: software_generative
+    key_numbers: "Text→music from **Gaussian** noise via diffusion; not facility fan hum as x_T"
+    vs_sim: "Name is misleading for DC task — we start from **measured fan STFT**, not pure Gaussian."
+
+  - id: stable_audio_open2024
+    authors: "Evans, Z., et al."
+    year: 2024
+    title: "Stable Audio Open"
+    venue: "arXiv"
+    arxiv_id: "2407.14358"
+    doi: ""
+    url: "https://arxiv.org/abs/2407.14358"
+    category: software_generative
+    key_numbers: "Text + optional **init_audio** / init_noise_level for A2A variation"
+    vs_sim: "Closest SOTA pattern for noise→structured audio; Java-LDM is task-specific, not these weights."
+
+  - id: audioldm2_2023
+    authors: "Liu, H., et al."
+    year: 2023
+    title: "AudioLDM 2: Learning Holistic Audio Generation with Self-supervised Pretraining"
+    venue: "arXiv"
+    arxiv_id: "2308.05734"
+    doi: ""
+    url: "https://arxiv.org/abs/2308.05734"
+    category: software_generative
+    key_numbers: "Latent diffusion in LOA space; strong reconstruction + controllable generation"
+    vs_sim: "Architecture reference — our Java-LDM uses tiny MLP score net on STFT latents."
+
   - id: whitelam2024
     authors: "Whitelam, S., et al."
     year: 2024
@@ -101,7 +137,7 @@ papers:
     url: "https://res.cloudinary.com/apsphysics/image/upload/v1766014133/LF20470_uuxl1g.pdf"
     category: physical_generative
     key_numbers: "Langevin dynamics on coupled oscillators denoise toward learned energy landscapes"
-    vs_sim: "MDMG module uses overdamped Langevin steps with a **fixed** music template landscape."
+    vs_sim: "MDMG v2 uses STFT Langevin with distilled K; v1 used fixed template + post-hoc harmonic blend."
 
   - id: engheta2019
     authors: "Hughes, T.W., et al."
@@ -158,3 +194,7 @@ plain_english_gaps:
     a: "Yes at rack scale (Bell Labs SeMSA). Perimeter soundscape valorization at AI-campus scale is not demonstrated."
   - q: "Why not just use speakers and AI software?"
     a: "This side gig asks what **passive/mechanical** paths could do with exhaust already on site — complementary, not exclusive."
+  - q: "DDPM vs Langevin — when is passive hardware enough?"
+    a: "Software DDPM needs a learned score at every step; Langevin MDM replaces that with -∇E_θ. If distillation error is low, springs may suffice; if not, software ceiling (Java-LDM) shows the task is learnable but needs richer hardware."
+  - q: "Why is Java-LDM not AudioLDM 2?"
+    a: "Billions of params and GPU training vs our ~200k-param CPU task model. Literature FAD/CLAP numbers cite true SOTA; we compare tiers fairly on the same DC fan-noise task."
