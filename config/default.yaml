@@ -1,0 +1,107 @@
+# GPU waste-heat robotic controller — Java simulator config
+
+physics:
+  cp_water: 4186.0
+  ambient_temp: 5.0
+
+primary_loop:
+  mdot: 12.0
+  t_in: 35.0
+  t_max: 65.0
+  t_min_flow: 8.0
+  reject_capacity: 500000.0
+
+heat_exchanger:
+  ua: 80000.0
+
+buffer_tank:
+  volume: 5000.0
+  initial_temp: 30.0
+
+loads:
+  pool:
+    volume: 80000.0
+    setpoint: 28.0
+    initial_temp: 22.0
+    loss_ua: 800.0
+  house:
+    thermal_mass: 50000.0
+    setpoint: 40.0
+    initial_temp: 18.0
+    loss_ua: 1200.0
+  carbon_capture:
+    regeneration_temp: 90.0
+    min_source_temp: 40.0
+    heat_pump_cop: 3.0
+    specific_heat_duty_j_per_kg: 5500000.0
+    hp_capacity_w: 150000.0
+  algae:
+    optimal_temp: 28.0
+    min_temp: 15.0
+    max_temp: 38.0
+    volume_m3: 200.0
+    surface_area_m2: 500.0
+    max_growth_g_m2_day: 40.0
+    co2_per_kg_biomass: 1.83
+    harvest_fraction: 0.80
+    loss_ua: 600.0
+    sparge_efficiency: 0.3
+    initial_temp: 20.0
+
+control:
+  dt: 1.0
+  robot_interval: 30.0
+  pid:
+    primary:
+      kp: 0.015
+      ki: 0.002
+      kd: 0.001
+    secondary:
+      kp: 0.02
+      ki: 0.003
+      kd: 0.0
+
+safety:
+  primary_t_trip: 63.0
+  secondary_dt_max: 25.0
+  robot_task_timeout: 120.0
+
+robot:
+  connect_duration: 15.0
+  switch_duration: 30.0
+  house_outside_threshold: 10.0
+  priority:
+    - house
+    - carbon_capture
+    - algae
+    - pool
+    - buffer
+  thresholds:
+    house_temp_delta: 1.0
+    pool_temp_delta: 0.5
+    buffer_charge_below: 45.0
+    algae_temp_delta: 1.0
+
+climate:
+  grid_co2_kg_per_kwh: 0.4
+  climate_sensitivity: 0.8
+
+scenarios:
+  climate_focus:
+    duration: 86400
+    q_waste_base: 250000.0
+    q_waste_peak: 450000.0
+    outside_temps:
+      - { hour: 0,  temp: 8.0 }
+      - { hour: 12, temp: 15.0 }
+      - { hour: 24, temp: 8.0 }
+  winter_day:
+    duration: 86400
+    q_waste_base: 200000.0
+    q_waste_peak: 400000.0
+    outside_temps:
+      - { hour: 0,  temp: 2.0 }
+      - { hour: 6,  temp: -1.0 }
+      - { hour: 12, temp: 8.0 }
+      - { hour: 18, temp: 4.0 }
+      - { hour: 24, temp: 2.0 }
