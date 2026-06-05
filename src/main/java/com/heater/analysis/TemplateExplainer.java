@@ -527,10 +527,9 @@ public final class TemplateExplainer {
                     .append("** — dignified community heat from exhaust that would otherwise be rejected\n");
         }
         sb.append(String.format(Locale.US,
-                "- **National scale context:** one hall's grid-scenario removal is **%s** — material for "
-                        + "**operational clawback**, not U.S. inventory replacement (~**1 in %,d**)\n\n",
-                scale.formatUsEmissionsShare(b200.annualizedNetTonnes()),
-                scale.usEmissionsOneIn(b200.annualizedNetTonnes())));
+                "- **National scale context:** one hall's grid-scenario removal is %s — material for "
+                        + "**operational clawback**, not U.S. inventory replacement\n\n",
+                scale.formatUsEmissionsShare(b200.annualizedNetTonnes())));
 
         sb.append("#### What the evidence does not support\n\n");
         sb.append("- **Equating grid cleanliness with heat availability** — exhaust exists on every grid mix\n");
@@ -563,7 +562,9 @@ public final class TemplateExplainer {
                     recoveryPct));
         }
         sb.append("| Prove campus carbon neutrality | **No** | Thermodynamics ≠ full lifecycle net-zero |\n");
-        sb.append("| Replace federal NET strategy | **No** | Tonne share ~1 in 130 of U.S. annual emissions per hall |\n\n");
+        sb.append(String.format(Locale.US,
+                "| Replace federal NET strategy | **No** | Tonne share ~1 in %,d of U.S. annual emissions per hall |\n\n",
+                scale.usEmissionsOneIn(b200.annualizedNetTonnes())));
 
         sb.append("#### Closing synthesis\n\n");
         sb.append(String.format(Locale.US,

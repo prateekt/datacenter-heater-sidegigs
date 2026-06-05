@@ -343,7 +343,7 @@ Industrial ecology treats data centers as **energy conversion devices** whose pr
 - **Saturation bound** — fixed downstream plant absorbs only **~2.2%** more GWh past ~1.3× heat input (Chart 3)
 - **25% operational CO₂ recovery** under today's U.S. grid — **37,776 t/yr** removed vs **149,265 t/yr** from powering the same GPUs (grid appendix)
 - **~28.4 million shelter hot showers/yr (~77,718/day)** — dignified community heat from exhaust that would otherwise be rejected
-- **National scale context:** one hall's grid-scenario removal is ****38 thousand tonnes** of **5,000 million tonnes** U.S. annual emissions (~**1 in 132,359**)** — material for **operational clawback**, not U.S. inventory replacement (~**1 in 132,359**)
+- **National scale context:** one hall's grid-scenario removal is **38 thousand tonnes** of **5,000 million tonnes** U.S. annual emissions (~**1 in 132,359**) — material for **operational clawback**, not U.S. inventory replacement
 
 #### What the evidence does not support
 
@@ -361,7 +361,7 @@ Industrial ecology treats data centers as **energy conversion devices** whose pr
 | Co-design Blackwell/Rubin halls with downstream plant | **Yes** | +TDP raises GWh/hall when plant scales (Chart 2) |
 | Partial operational CO₂ clawback (grid scenario) | **Partial — 25%** | Not neutrality; **labeled** 0.39 kg/kWh assumption |
 | Prove campus carbon neutrality | **No** | Thermodynamics ≠ full lifecycle net-zero |
-| Replace federal NET strategy | **No** | Tonne share ~1 in 130 of U.S. annual emissions per hall |
+| Replace federal NET strategy | **No** | Tonne share ~1 in 132,359 of U.S. annual emissions per hall |
 
 #### Closing synthesis
 
@@ -462,7 +462,7 @@ As the U.S. grid decarbonizes, **GPU operational CO₂ falls** but **waste heat 
 
 **Pools, fisheries, showers vs. DAC?** Same exhaust, different router priority — a **policy choice** about where to send thermal service before dissipation.
 
-### Generated at: 2026-06-05T10:38:28.883578Z
+### Generated at: 2026-06-05T10:38:49.285562Z
 
 ### Sources
 
@@ -645,11 +645,11 @@ Annualized net removal: ... tonnes CO2e/yr
 
 | Complicated word | Think of it like… |
 |------------------|-------------------|
-| Waste heat | Computers get hot like a game console — that warmth is waste heat. |
-| Fans | The chimney does part of the leaf-blower's job. |
 | CO₂ capture sponge | A sponge in the air that grabs CO₂ molecules. |
 | Convection / chimney | Hot air rises like steam from soup — it pulls more air along. |
 | Regeneration | Heating the sponge to squeeze the CO₂ out, like wringing a towel. |
+| Waste heat | Computers get hot like a game console — that warmth is waste heat. |
+| Fans | The chimney does part of the leaf-blower's job. |
 
 ### What the simulation tried (still experimental in real life)
 
@@ -834,7 +834,7 @@ Treat this module as **structured speculation**: physics plausible, economics un
 - Liquid-cooled halls may need extra steps to warm the air chimney
 - Speculative — physics is plausible, real plants are not built yet. Computer experiment only.
 
-### Generated at: 2026-06-05T10:38:31.479294Z
+### Generated at: 2026-06-05T10:38:52.103694Z
 
 ### Sources
 
