@@ -69,10 +69,14 @@ public final class TemplateExplainer {
         appendForecastRow(sb, summary, "2026", "Rubin hall");
 
         sb.append("\n### Scenario narratives\n\n");
-        appendThermalNarrative(sb, summary, "Lab footprint (~5k H100)", "gpu_count_ramp", 5000, null);
-        appendThermalNarrative(sb, summary, "Single Colossus-class hall (25k B200)", "gpu_generation", 25000, "B200_LC");
-        appendThermalNarrative(sb, summary, "Regional campus (10 halls)", "multi_hall", 10, null);
-        appendThermalNarrative(sb, summary, "Rubin-era hall (forecast)", "forecast_timeline", 2026, null);
+        sb.append("Each row is a **7-day simulation** annualized to one year. Capture plant, HX, and buffer **scale proportionally** ")
+                .append("with GPU count — so **capture yield** (thermal service ÷ exhaust) stays ~similar until saturation. ")
+                .append("**Multi-hall** numbers are **×N linear extrapolation** from one simulated hall (not separate campus plumbing). ")
+                .append("DAC-priority routing: algae MWh is ~0; rejected GWh is small when the regenerator keeps up.\n\n");
+        appendThermalNarrative(sb, summary, "Lab footprint", "gpu_count_ramp", 5000, null);
+        appendThermalNarrative(sb, summary, "Colossus-class hall", "gpu_generation", 25000, "B200_LC");
+        appendThermalNarrative(sb, summary, "Regional campus", "multi_hall", 10, null);
+        appendThermalNarrative(sb, summary, "Rubin-era hall", "forecast_timeline", 2026, null);
 
         appendConclusionSection(sb, summary, scale, registry);
         appendGridScenarioAppendix(sb, summary, scale, registry);
@@ -389,8 +393,8 @@ public final class TemplateExplainer {
         SweepPoint p = resolvePoint(summary, sweepId, key, profileId);
         if (p == null) return;
         sb.append(String.format(Locale.US,
-                "| %s | %,d | %s | %d | **%.1f** | %,.0f (grid scenario) |\n",
-                label, p.gpuCount(), p.profileName(), p.halls(),
+                "| %s | %s | %s | %d | **%.1f** | %,.0f (grid scenario) |\n",
+                label, formatGpuColumn(p), p.profileName(), p.halls(),
                 p.thermal().annualizedRecoveredGwh(), p.annualizedNetTonnes()));
     }
 
@@ -400,9 +404,16 @@ public final class TemplateExplainer {
                 .filter(pt -> pt.label().startsWith(year)).findFirst().orElse(null);
         if (p == null) return;
         sb.append(String.format(Locale.US,
-                "| %s | %,d | %s | %d | **%.1f** | %,.0f (grid scenario) |\n",
-                label, p.gpuCount(), p.profileName(), p.halls(),
+                "| %s | %s | %s | %d | **%.1f** | %,.0f (grid scenario) |\n",
+                label, formatGpuColumn(p), p.profileName(), p.halls(),
                 p.thermal().annualizedRecoveredGwh(), p.annualizedNetTonnes()));
+    }
+
+    private static String formatGpuColumn(SweepPoint p) {
+        if (p.halls() > 1) {
+            return String.format(Locale.US, "%,d (%,d/hall)", p.gpuCount() * p.halls(), p.gpuCount());
+        }
+        return String.format(Locale.US, "%,d", p.gpuCount());
     }
 
     private static void appendThermalNarrative(StringBuilder sb, ResultsSummary summary,
@@ -410,11 +421,26 @@ public final class TemplateExplainer {
         SweepPoint p = resolvePoint(summary, sweepId, key, profileId);
         if (p == null) return;
         ThermalReport t = p.thermal();
+        double exhaustGwh = p.avgWasteHeatMw() * 8760.0 / 1000.0;
+        double yieldPct = exhaustGwh > 0 ? 100.0 * t.annualizedRecoveredGwh() / exhaustGwh : 0.0;
+        int totalGpus = p.gpuCount() * Math.max(1, p.halls());
+
+        StringBuilder meta = new StringBuilder();
+        meta.append(String.format(Locale.US, "%,d × %s", totalGpus, p.profileName()));
+        if (p.halls() > 1) {
+            meta.append(String.format(Locale.US, " · %d halls (×%d linear extrapolation)", p.halls(), p.halls()));
+        }
+        if (p.forecast()) {
+            meta.append(" · †forecast SKU");
+        }
+
         sb.append(String.format(Locale.US,
-                "**%s** — **%.1f GWh/yr** thermal service at **%.0f MW** waste heat "
-                        + "(DAC **%.0f** · algae **%.0f** · rejected **%.0f GWh/yr**). "
-                        + "Grid scenario: **%,.0f tonnes CO₂e/yr** net removed.\n\n",
-                title, t.annualizedRecoveredGwh(), p.avgWasteHeatMw(),
+                "**%s** — %s. **%.2f GWh/yr** thermal service from **%.2f MW** avg waste heat "
+                        + "(**%.1f%% capture yield** of **%.1f GWh/yr** continuous exhaust). "
+                        + "Split: DAC **%.2f** · algae **%.2f** · rejected **%.3f GWh/yr**. "
+                        + "Grid scenario: **%,.0f t CO₂e/yr** net.\n\n",
+                title, meta,
+                t.annualizedRecoveredGwh(), p.avgWasteHeatMw(), yieldPct, exhaustGwh,
                 t.dacMwh() / 1000.0, t.algaeMwh() / 1000.0, t.rejectedMwh() / 1000.0,
                 p.annualizedNetTonnes()));
     }

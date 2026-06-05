@@ -324,13 +324,15 @@ The same **~34 MW** waste-heat stream can be routed to **DAC**, **heated pools**
 
 ### Scenario narratives
 
-**Lab footprint (~5k H100)** — **10.0 GWh/yr** thermal service at **5 MW** waste heat (DAC **10** · algae **0** · rejected **0 GWh/yr**). Grid scenario: **5,317 tonnes CO₂e/yr** net removed.
+Each row is a **7-day simulation** annualized to one year. Capture plant, HX, and buffer **scale proportionally** with GPU count — so **capture yield** (thermal service ÷ exhaust) stays ~similar until saturation. **Multi-hall** numbers are **×N linear extrapolation** from one simulated hall (not separate campus plumbing). DAC-priority routing: algae MWh is ~0; rejected GWh is small when the regenerator keeps up.
 
-**Single Colossus-class hall (25k B200)** — **70.9 GWh/yr** thermal service at **34 MW** waste heat (DAC **71** · algae **0** · rejected **0 GWh/yr**). Grid scenario: **37,776 tonnes CO₂e/yr** net removed.
+**Lab footprint** — 5,000 × H100 SXM. **9.98 GWh/yr** thermal service from **4.75 MW** avg waste heat (**24.0% capture yield** of **41.6 GWh/yr** continuous exhaust). Split: DAC **9.98** · algae **0.00** · rejected **0.019 GWh/yr**. Grid scenario: **5,317 t CO₂e/yr** net.
 
-**Regional campus (10 halls)** — **709.2 GWh/yr** thermal service at **338 MW** waste heat (DAC **709** · algae **0** · rejected **1 GWh/yr**). Grid scenario: **377,760 tonnes CO₂e/yr** net removed.
+**Colossus-class hall** — 25,000 × B200 (liquid). **70.92 GWh/yr** thermal service from **33.75 MW** avg waste heat (**24.0% capture yield** of **295.7 GWh/yr** continuous exhaust). Split: DAC **70.92** · algae **0.00** · rejected **0.132 GWh/yr**. Grid scenario: **37,776 t CO₂e/yr** net.
 
-**Rubin-era hall (forecast)** — **70.7 GWh/yr** thermal service at **34 MW** waste heat (DAC **71** · algae **0** · rejected **0 GWh/yr**). Grid scenario: **37,675 tonnes CO₂e/yr** net removed.
+**Regional campus** — 250,000 × B200 (liquid) · 10 halls (×10 linear extrapolation). **709.18 GWh/yr** thermal service from **337.50 MW** avg waste heat (**24.0% capture yield** of **2956.5 GWh/yr** continuous exhaust). Split: DAC **709.18** · algae **0.00** · rejected **1.321 GWh/yr**. Grid scenario: **377,760 t CO₂e/yr** net.
+
+**Rubin-era hall** — 13,200 × Vera Rubin Max-P · †forecast SKU. **70.73 GWh/yr** thermal service from **33.66 MW** avg waste heat (**24.0% capture yield** of **294.9 GWh/yr** continuous exhaust). Split: DAC **70.73** · algae **0.00** · rejected **0.132 GWh/yr**. Grid scenario: **37,675 t CO₂e/yr** net.
 
 ### Conclusion — synthesis, significance, and decision frame
 
@@ -468,7 +470,7 @@ As the U.S. grid decarbonizes, **GPU operational CO₂ falls** but **waste heat 
 
 **Pools, fisheries, showers vs. DAC?** Same exhaust, different router priority — a **policy choice** about where to send thermal service before dissipation.
 
-### Generated at: 2026-06-05T10:44:26.224676Z
+### Generated at: 2026-06-05T10:45:22.635853Z
 
 ### Sources
 

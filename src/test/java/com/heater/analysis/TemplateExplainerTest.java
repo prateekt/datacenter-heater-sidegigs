@@ -24,5 +24,7 @@ class TemplateExplainerTest {
         assertTrue(markdown.contains("GWh/yr"));
         assertFalse(markdown.indexOf("GWh/yr") > markdown.indexOf("Appendix: Grid-dependent"),
                 "Thermal GWh should appear before grid appendix");
+        assertTrue(markdown.contains("capture yield"), "Narratives should show capture yield %");
+        assertTrue(markdown.contains("linear extrapolation"), "Multi-hall caveat should be documented");
     }
 }
