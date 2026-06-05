@@ -3,6 +3,8 @@ package com.heater.analysis;
 public record HeatApplicationPoint(
         String scenarioId,
         String label,
+        String robotPriority,
+        String routingNote,
         double netCo2eTonnesPerYear,
         double heatPoolMwh,
         double heatAquacultureMwh,

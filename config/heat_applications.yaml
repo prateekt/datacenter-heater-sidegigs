@@ -39,9 +39,15 @@ application_scenarios:
   - id: dac_priority
     label: "DAC priority (climate)"
     config: config/nvidia_us_expansion.yaml
+    robot_priority: "carbon_capture → algae → buffer"
+    routing_note: "Pools and fisheries are not in the robot list — all recoverable heat goes to DAC regeneration (~71 GWh/yr)."
   - id: community_heat
     label: "Community heat (pools + fisheries)"
     config: config/nvidia_us_community.yaml
+    robot_priority: "pool → aquaculture → algae → carbon_capture → buffer"
+    routing_note: "Amenities first; DAC gets leftover heat (~2.9 GWh/yr) — large CO₂ trade-off vs climate priority."
   - id: algae_dac_balanced
     label: "Algae + DAC balanced"
     config: config/nvidia_us_algae.yaml
+    robot_priority: "algae → carbon_capture → buffer"
+    routing_note: "No pools/fisheries. Algae is first in line — daytime pond maintenance starves DAC (~6.2 GWh/yr), so total routed heat (~9.9 GWh/yr) is far below DAC-only (~71 GWh/yr)."

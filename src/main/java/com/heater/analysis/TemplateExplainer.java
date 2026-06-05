@@ -600,16 +600,24 @@ public final class TemplateExplainer {
                 .append("(e.g. `nvidia_us_expansion.yaml` sends everything to DAC). ")
                 .append("**Homes** and **hot showers** are *hypothetical redirects* of the same total MWh — not simultaneous loads.\n\n");
 
-        sb.append("| Priority scenario | Heat (MWh/yr) | Hot showers/yr | Net CO₂e (t/yr, grid) | Olympic pools | Raceways | Homes equiv. |\n");
-        sb.append("|-------------------|---------------|----------------|------------------------|---------------|----------|-------------|\n");
+        sb.append("| Priority scenario | Robot order | Routed MWh/yr (pool · fish · algae · DAC) | Net CO₂e (t/yr) |\n");
+        sb.append("|-------------------|-------------|----------------------------------------|-----------------|\n");
         for (HeatApplicationPoint p : apps) {
             sb.append(String.format(Locale.US,
-                    "| %s | **%,.0f** | **%s** | %,.0f | %.1f | %.1f | %,.0f |\n",
-                    p.label(), p.heatTotalMwh(),
-                    HeatApplicationAnalyzer.formatHotShowersCompact(p.hotShowersEquivalent()),
-                    p.netCo2eTonnesPerYear(),
-                    p.olympicPoolsEquivalent(), p.aquacultureRacewaysEquivalent(),
-                    p.homesHeatedEquivalent()));
+                    "| %s | %s | **%,.0f** (%.0f · %.0f · %.0f · %.0f) | %,.0f |\n",
+                    p.label(),
+                    p.robotPriority().isBlank() ? "—" : p.robotPriority(),
+                    p.heatTotalMwh(),
+                    p.heatPoolMwh(), p.heatAquacultureMwh(), p.heatAlgaeMwh(), p.heatDacMwh(),
+                    p.netCo2eTonnesPerYear()));
+        }
+        sb.append("\n| Priority scenario | Hypothetical redirect (same MWh → homes / showers) |\n");
+        sb.append("|-------------------|------------------------------------------------------|\n");
+        for (HeatApplicationPoint p : apps) {
+            sb.append(String.format(Locale.US,
+                    "| %s | **~%,.0f homes**, **%s** |\n",
+                    p.label(), p.homesHeatedEquivalent(),
+                    HeatApplicationAnalyzer.formatHotShowers(p.hotShowersEquivalent())));
         }
         sb.append("\n*Hot showers / homes: **hypothetical redirect** of total MWh (~2.5 kWh/shower; ~8 MWh/home-yr). ")
                 .append("Olympic pools and raceways count only when pool/aquaculture are in robot priority.*\n\n");

@@ -43,6 +43,8 @@ public final class HeatApplicationAnalyzer {
         for (Map<String, Object> sc : scenarios) {
             String id = sc.get("id").toString();
             String label = sc.getOrDefault("label", id).toString();
+            String robotPriority = sc.getOrDefault("robot_priority", "").toString();
+            String routingNote = sc.getOrDefault("routing_note", "").toString();
             String configPath = sc.get("config").toString();
             Map<String, Object> scenarioConfig = ConfigLoader.load(configPath);
 
@@ -74,6 +76,8 @@ public final class HeatApplicationAnalyzer {
             results.add(new HeatApplicationPoint(
                     id,
                     label,
+                    robotPriority,
+                    routingNote,
                     netTonnes,
                     poolMwh,
                     aquaMwh,
@@ -108,10 +112,16 @@ public final class HeatApplicationAnalyzer {
     public static String formatPoint(HeatApplicationPoint p) {
         StringBuilder sb = new StringBuilder();
         sb.append(String.format(Locale.US,
-                "**%s** — **%,.0f tonnes CO₂e/yr** net. **Routed heat:** **%,.0f MWh/yr** "
+                "**%s** — **%,.0f tonnes CO₂e/yr** net. **Robot priority:** %s. "
+                        + "**Routed heat:** **%,.0f MWh/yr** "
                         + "(pools **%,.0f** · fisheries **%,.0f** · algae **%,.0f** · DAC **%,.0f**).",
-                p.label(), p.netCo2eTonnesPerYear(), p.heatTotalMwh(),
+                p.label(), p.netCo2eTonnesPerYear(),
+                p.robotPriority().isBlank() ? "see config YAML" : p.robotPriority(),
+                p.heatTotalMwh(),
                 p.heatPoolMwh(), p.heatAquacultureMwh(), p.heatAlgaeMwh(), p.heatDacMwh()));
+        if (!p.routingNote().isBlank()) {
+            sb.append(" ").append(p.routingNote());
+        }
 
         if (p.heatPoolMwh() > 0.5) {
             sb.append(String.format(Locale.US,
