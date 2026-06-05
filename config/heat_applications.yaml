@@ -23,6 +23,14 @@ district_heat:
   us_home_annual_heat_kwh: 8000
   source: "EIA — average U.S. home space-heating energy ~6–10 MWh/yr"
 
+homeless_shelter_shower:
+  kwh_per_shower: 2.5
+  duration_min: 8
+  water_liters: 60
+  inlet_temp_c: 15
+  outlet_temp_c: 42
+  source: "Mobile shower / shelter unit — ~60 L heated ~27°C plus distribution losses (Lava Mae–class dignity shower)"
+
 algae_pond:
   hectares_per_mw_heat: 0.5
   source: "Rough PBR sizing — ~0.5 ha algae pond per MW thermal service"

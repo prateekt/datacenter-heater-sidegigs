@@ -144,6 +144,13 @@ public final class TemplateExplainer {
                 sb.append(String.format(Locale.US,
                         "- **Pools + fisheries first** → **%,.0f tonnes/yr** removed, but **~%,.0f homes**-worth of community heat\n",
                         community.netCo2eTonnesPerYear(), community.homesHeatedEquivalent()));
+                HeatApplicationPoint dacApp = apps.stream()
+                        .filter(a -> "dac_priority".equals(a.scenarioId())).findFirst().orElse(null);
+                if (dacApp != null) {
+                    sb.append("- **If routed to shelter showers instead:** ")
+                            .append(HeatApplicationAnalyzer.formatHotShowers(dacApp.hotShowersEquivalent()))
+                            .append(" from one hall's waste heat\n");
+                }
                 sb.append("- Details in [Secondary heat applications](#secondary-heat-applications) below\n\n");
             }
 
@@ -314,20 +321,23 @@ public final class TemplateExplainer {
         if (apps.isEmpty()) return;
 
         sb.append("<a id=\"secondary-heat-applications\"></a>\n\n");
-        sb.append("### Secondary heat applications — pools, fisheries, community heat\n\n");
-        sb.append("The same **~34 MW** waste-heat stream can be routed to **DAC**, **heated pools**, **aquaculture raceways**, or **algae** ")
+        sb.append("### Secondary heat applications — pools, fisheries, showers, community heat\n\n");
+        sb.append("The same **~34 MW** waste-heat stream can be routed to **DAC**, **heated pools**, **aquaculture raceways**, **algae**, or **shelter hot showers** ")
                 .append("(MVP: one path at a time). Metrics translate delivered MWh into real-world equivalents ")
-                .append("(olympic pool ~180 MWh/yr; community pool ~45 MWh/yr; 500 m³ raceway ~241 MWh/yr maintenance; U.S. home ~8 MWh/yr heat).\n\n");
+                .append("(olympic pool ~180 MWh/yr; shelter hot shower ~2.5 kWh; U.S. home ~8 MWh/yr heat).\n\n");
 
-        sb.append("| Priority scenario | Net CO₂e (t/yr) | Heat delivered (MWh/yr) | Olympic pools | Raceways (500 m³) | Fish potential (kg/yr) | Homes equiv. |\n");
-        sb.append("|-------------------|-----------------|---------------------------|---------------|-------------------|--------------------------|-------------|\n");
+        sb.append("| Priority scenario | Net CO₂e (t/yr) | Heat (MWh/yr) | Hot showers/yr | Olympic pools | Raceways | Homes equiv. |\n");
+        sb.append("|-------------------|-----------------|---------------|----------------|---------------|----------|-------------|\n");
         for (HeatApplicationPoint p : apps) {
             sb.append(String.format(Locale.US,
-                    "| %s | **%,.0f** | %,.0f | %.1f | %.1f | %,.0f | %,.0f |\n",
+                    "| %s | **%,.0f** | %,.0f | **%s** | %.1f | %.1f | %,.0f |\n",
                     p.label(), p.netCo2eTonnesPerYear(), p.heatTotalMwh(),
+                    HeatApplicationAnalyzer.formatHotShowersCompact(p.hotShowersEquivalent()),
                     p.olympicPoolsEquivalent(), p.aquacultureRacewaysEquivalent(),
-                    p.fishProductionKgPerYear(), p.homesHeatedEquivalent()));
+                    p.homesHeatedEquivalent()));
         }
+        sb.append("\n*Hot showers: dignified **8-min shelter/mobile unit** shower (~60 L warmed to 42°C, ~2.5 kWh each). "
+                + "Illustrates community heat potential — not a modeled load in the simulator yet.*\n\n");
         sb.append("\n");
 
         HeatApplicationPoint dac = apps.stream().filter(a -> "dac_priority".equals(a.scenarioId())).findFirst().orElse(null);

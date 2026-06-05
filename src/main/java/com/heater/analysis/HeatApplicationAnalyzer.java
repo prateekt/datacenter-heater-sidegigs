@@ -36,6 +36,7 @@ public final class HeatApplicationAnalyzer {
         double wPerM3 = ConfigLoader.d(ConfigLoader.map(appsRoot, "aquaculture"), "maintenance_w_per_m3", 55);
         double fishKgM3Yr = ConfigLoader.d(ConfigLoader.map(appsRoot, "aquaculture"), "fish_kg_per_m3_year", 25);
         double homeKwh = ConfigLoader.d(ConfigLoader.map(appsRoot, "district_heat"), "us_home_annual_heat_kwh", 8000);
+        double showerKwh = ConfigLoader.d(ConfigLoader.map(appsRoot, "homeless_shelter_shower"), "kwh_per_shower", 2.5);
         double racewayKwhPerYear = wPerM3 * racewayM3 * 8760.0 / 1000.0;
 
         for (Map<String, Object> sc : scenarios) {
@@ -83,6 +84,7 @@ public final class HeatApplicationAnalyzer {
                     fishKg,
                     sim.state.algae.surfaceAreaM2 / 10_000.0,
                     totalMwh * 1000.0 / homeKwh,
+                    totalMwh * 1000.0 / showerKwh,
                     metrics.poolSatisfactionPct()
             ));
         }
@@ -106,10 +108,35 @@ public final class HeatApplicationAnalyzer {
                 "**%s** — **%,.0f tonnes CO₂e/yr** net. Heat delivered: **%,.0f MWh/yr** total "
                         + "(pools **%,.0f** · fisheries **%,.0f** · algae **%,.0f** · DAC **%,.0f**). "
                         + "≈ **%.1f olympic pools**, **%.1f raceways** (500 m³), **~%,.0f kg fish/yr** potential, "
-                        + "**%.1f ha** algae, **~%,.0f homes** heat equivalent.",
+                        + "**%.1f ha** algae, **~%,.0f homes** heat equivalent, **%s**.",
                 p.label(), p.netCo2eTonnesPerYear(), p.heatTotalMwh(),
                 p.heatPoolMwh(), p.heatAquacultureMwh(), p.heatAlgaeMwh(), p.heatDacMwh(),
                 p.olympicPoolsEquivalent(), p.aquacultureRacewaysEquivalent(), p.fishProductionKgPerYear(),
-                p.algaeHectaresEquivalent(), p.homesHeatedEquivalent());
+                p.algaeHectaresEquivalent(), p.homesHeatedEquivalent(),
+                formatHotShowers(p.hotShowersEquivalent()));
+    }
+
+    public static String formatHotShowers(double showersPerYear) {
+        if (showersPerYear >= 1_000_000) {
+            return String.format(Locale.US,
+                    "~%.1f million shelter hot showers/yr (~%,.0f/day)",
+                    showersPerYear / 1_000_000.0, showersPerYear / 365.0);
+        }
+        if (showersPerYear >= 1_000) {
+            return String.format(Locale.US,
+                    "~%,.0f shelter hot showers/yr (~%,.0f/day)",
+                    showersPerYear, showersPerYear / 365.0);
+        }
+        return String.format(Locale.US, "~%.0f shelter hot showers/yr", showersPerYear);
+    }
+
+    public static String formatHotShowersCompact(double showersPerYear) {
+        if (showersPerYear >= 1_000_000) {
+            return String.format(Locale.US, "%.1fM", showersPerYear / 1_000_000.0);
+        }
+        if (showersPerYear >= 1_000) {
+            return String.format(Locale.US, "%.0fK", showersPerYear / 1_000.0);
+        }
+        return String.format(Locale.US, "%.0f", showersPerYear);
     }
 }

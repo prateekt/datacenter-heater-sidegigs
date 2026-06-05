@@ -90,7 +90,8 @@ public final class ResultsSummary {
                 "\"heat_total_mwh\":" + fmt(p.heatTotalMwh()) + "," +
                 "\"olympic_pools_equiv\":" + fmt(p.olympicPoolsEquivalent()) + "," +
                 "\"aquaculture_raceways_equiv\":" + fmt(p.aquacultureRacewaysEquivalent()) + "," +
-                "\"fish_kg_per_year\":" + fmt(p.fishProductionKgPerYear()) +
+                "\"fish_kg_per_year\":" + fmt(p.fishProductionKgPerYear()) + "," +
+                "\"hot_showers_equiv\":" + fmt(p.hotShowersEquivalent()) +
                 "}";
     }
 

@@ -1,11 +1,11 @@
 {
-  "generated_at": "2026-06-05T09:30:12.446096Z",
+  "generated_at": "2026-06-05T09:37:04.962484Z",
   "metadata": {"sim_duration_s": 604800.00, "reference_profile_id": "B200_LC", "reference_gpu_count": 25000.00},
   "charts": ["docs/figures/co2_vs_gpu_count.png", "docs/figures/co2_vs_gpu_generation.png", "docs/figures/co2_saturation_gpu.png", "docs/figures/co2_multi_hall.png", "docs/figures/gross_vs_net_co2.png", "docs/figures/gpu_tdp_timeline.png"],
   "applications": [
-    {"scenario_id":"dac_priority","label":"DAC priority (climate)","net_co2e_tonnes_per_year":37775.95,"heat_pool_mwh":0.0000,"heat_aquaculture_mwh":0.0000,"heat_total_mwh":70918.05,"olympic_pools_equiv":0.0000,"aquaculture_raceways_equiv":0.0000,"fish_kg_per_year":0.0000},
-    {"scenario_id":"community_heat","label":"Community heat (pools + fisheries)","net_co2e_tonnes_per_year":1720.82,"heat_pool_mwh":96.7819,"heat_aquaculture_mwh":103.94,"heat_total_mwh":6509.67,"olympic_pools_equiv":0.5377,"aquaculture_raceways_equiv":0.4315,"fish_kg_per_year":5393.19},
-    {"scenario_id":"algae_dac_balanced","label":"Algae + DAC balanced","net_co2e_tonnes_per_year":3623.31,"heat_pool_mwh":0.0000,"heat_aquaculture_mwh":0.0000,"heat_total_mwh":9894.34,"olympic_pools_equiv":0.0000,"aquaculture_raceways_equiv":0.0000,"fish_kg_per_year":0.0000}
+    {"scenario_id":"dac_priority","label":"DAC priority (climate)","net_co2e_tonnes_per_year":37775.95,"heat_pool_mwh":0.0000,"heat_aquaculture_mwh":0.0000,"heat_total_mwh":70918.05,"olympic_pools_equiv":0.0000,"aquaculture_raceways_equiv":0.0000,"fish_kg_per_year":0.0000,"hot_showers_equiv":28367220.1},
+    {"scenario_id":"community_heat","label":"Community heat (pools + fisheries)","net_co2e_tonnes_per_year":1720.82,"heat_pool_mwh":96.7819,"heat_aquaculture_mwh":103.94,"heat_total_mwh":6509.67,"olympic_pools_equiv":0.5377,"aquaculture_raceways_equiv":0.4315,"fish_kg_per_year":5393.19,"hot_showers_equiv":2603869.5},
+    {"scenario_id":"algae_dac_balanced","label":"Algae + DAC balanced","net_co2e_tonnes_per_year":3623.31,"heat_pool_mwh":0.0000,"heat_aquaculture_mwh":0.0000,"heat_total_mwh":9894.34,"olympic_pools_equiv":0.0000,"aquaculture_raceways_equiv":0.0000,"fish_kg_per_year":0.0000,"hot_showers_equiv":3957734.6}
   ],
   "points": [
     {"sweep_id":"gpu_count_ramp","label":"5000 GPUs","gpu_count":5000,"profile_id":"H100_SXM","profile_name":"H100 SXM","halls":1,"avg_waste_heat_mw":4.7500,"net_co2e_kg":101962.48,"gross_co2_kg":125291.50,"annualized_net_tonnes":5316.62,"annualized_gross_tonnes":6533.06,"forecast":false},

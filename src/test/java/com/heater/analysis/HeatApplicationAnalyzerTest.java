@@ -23,5 +23,7 @@ class HeatApplicationAnalyzerTest {
         assertTrue(dac.netCo2eTonnesPerYear() > 0);
         assertTrue(dac.heatDacMwh() > community.heatDacMwh());
         assertTrue(community.heatPoolMwh() + community.heatAquacultureMwh() > 0);
+        assertTrue(dac.hotShowersEquivalent() > 1_000_000, "DAC heat should equate to millions of shelter showers");
+        assertEquals(dac.heatTotalMwh() * 1000.0 / 2.5, dac.hotShowersEquivalent(), dac.heatTotalMwh() * 0.01);
     }
 }

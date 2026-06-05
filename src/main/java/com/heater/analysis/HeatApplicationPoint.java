@@ -15,5 +15,6 @@ public record HeatApplicationPoint(
         double fishProductionKgPerYear,
         double algaeHectaresEquivalent,
         double homesHeatedEquivalent,
+        double hotShowersEquivalent,
         double poolSatisfactionPct
 ) {}
