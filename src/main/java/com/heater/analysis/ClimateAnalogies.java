@@ -129,6 +129,12 @@ public final class ClimateAnalogies {
         return formatShareReadable(tonnesPerYear, usTotalMillionTonnes * 1_000_000.0, "U.S. annual emissions");
     }
 
+    public long usEmissionsOneIn(double tonnesPerYear) {
+        double whole = usTotalMillionTonnes * 1_000_000.0;
+        if (tonnesPerYear <= 0 || whole <= 0) return 0;
+        return Math.max(1L, Math.round(whole / tonnesPerYear));
+    }
+
     /**
      * Compact scale narrative: tonnes, readable national context, agriculture, transport.
      */

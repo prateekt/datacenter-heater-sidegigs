@@ -305,6 +305,52 @@ The same **~34 MW** waste-heat stream can be routed to **DAC**, **heated pools**
 
 **Rubin-era hall (forecast)** — **37,675 tonnes CO₂e/year** net removed — **38 thousand tonnes** of **5,000 million tonnes** U.S. annual emissions (~**1 in 132,713**). Roughly **~75,350 acres** of USDA cover-crop program (~169 farms), or **~8,190 cars** gasoline cars / **~18,838 cars** EVs parked for a year. *(MVP: single heat path; parallel DAC+algae would raise totals.)*
 
+### Conclusion — significance, limits, and what's worth it
+
+> **Verdict:** Waste-heat DAC at a Colossus-class hall is **worth doing as colocated clawback** (not as a national climate strategy). You recuperate **25%** of the hall's own GPU-grid CO₂ while still emitting **111,489 tonnes/yr** net — real value on heat already paid for, **not** permission to build without limit.
+
+#### What is significant ✅
+
+- **37,776 tonnes CO₂e/year** net removed from **one hall** — audit-grade, reportable climate benefit
+- **25% operational recovery** — the fairest "worth it?" score: DAC vs. the same hall's GPU electricity
+- **377,760 tonnes/yr at 10 halls** — campus-scale impact that starts to show up in regional planning
+- **+42% removal** moving H100 → B200 at the same 25k-GPU footprint — hotter silicon = more DAC headroom
+- **Saturation is real** — past ~1.3× heat, net removal barely moves; **DAC plant must scale with GPUs**
+- **~28.4 million shelter hot showers/yr (~77,718/day)** if heat went to shelter showers — enormous **human dignity** potential from the same exhaust
+
+#### What is not significant ❌
+
+- **Fixing U.S. or global climate alone** — **38 thousand tonnes** of **5,000 million tonnes** U.S. annual emissions (~**1 in 132,359**); one hall cannot offset national inventory
+- **"Cars off the road" headlines** — transport electrifies; tonnes and **% recovery** are the durable metrics
+- **Calling the hall carbon-neutral** — still **111,489 tonnes/yr net emitted** after DAC at reference settings
+- **Assuming more GPUs automatically help** — without proportional DAC capex, removal **plateaus** (see Chart 3)
+- **Community-first routing as a climate play** — prioritizing pools/fisheries drops removal by **~95%**
+
+#### What matters for operators and policymakers
+
+| Question | Why it matters |
+|----------|----------------|
+| **% operational recovery** | Fair comparison to the facility's own carbon bill |
+| **Tonnes per hall / campus** | Contracting, ESG reporting, offset claims |
+| **DAC scales with heat?** | Capex decision — oversizing GPUs without capture wastes potential |
+| **Heat routing priority** | Climate vs. community benefit is a **policy choice**, not physics |
+| **Grid decarbonization** | GPU ops CO₂ falls over time; **waste heat stays** — DAC value per MWh can rise |
+
+#### What's worth it? — decision guide
+
+| If your goal is… | Worth it? | Simulation says… |
+|------------------|-----------|------------------|
+| Claw back GPU operational CO₂ on waste heat you already produce | **Yes — partially** | **25% recovery**, **37,776 t/yr** net removed per hall |
+| Replace national or global mitigation strategy | **No** | One hall ≈ **1 in 132,359** of U.S. annual emissions |
+| ESG disclosure / measurable removal at AI campuses | **Yes** | Tonnes are engineering-grade; charts scale to multi-hall rollouts |
+| Shelter showers, pools, fisheries near the campus | **Trade-off** | **1,721 t/yr** removed vs. **37,776 t/yr** DAC-first — but **~28.4 million shelter hot showers/yr (~77,718/day)** possible |
+| Build more GPU capacity *because* DAC exists | **No** | Hall remains a **net emitter**; DAC extracts value from exhaust, not a blank check |
+| Plan Blackwell / Rubin halls with colocated capture | **Yes — if sized together** | Hotter generations and proportional plants raise **tonnes/hall** |
+
+#### Bottom line
+
+**Significant:** tens of thousands of tonnes per hall, ~one-quarter operational recovery, and clear scaling lessons for NVIDIA-era buildouts. **Not significant:** national climate salvation, car analogies, or carbon-neutral claims. **Worth it?** **Yes** as **colocated exhaust recovery + optional community heat** on infrastructure that will exist anyway; **no** as a substitute for grid greening, efficient silicon, or proportional DAC investment.
+
 ### FAQ
 
 **Why tonnes on charts, not cars?** Tonnes are the engineering and reporting unit. Cars are a fading proxy as transport electrifies — we keep them in prose with an EV caveat.
@@ -319,7 +365,7 @@ The same **~34 MW** waste-heat stream can be routed to **DAC**, **heated pools**
 
 **Pools and fisheries vs. DAC?** Same waste heat, different router priority. Community scenarios trade some CO₂ removal for **pools, raceway aquaculture, and district-heat equivalents** — see Secondary heat applications above.
 
-### Generated at: 2026-06-05T09:37:04.962484Z
+### Generated at: 2026-06-05T09:40:57.941272Z
 
 ### Sources
 
