@@ -100,7 +100,7 @@ public final class ConvectionTemplateExplainer {
         sb.append("### Then the numbers\n\n");
         if (ref != null) {
             sb.append("**Reference hall** (~")
-                    .append(String.format(Locale.US, "%.0f", ref.avgWasteHeatMw()))
+                    .append(String.format(Locale.US, "%.1f", ref.avgWasteHeatMw()))
                     .append(" MW waste heat, ")
                     .append(String.format(Locale.US, "%.0f", ref.chimneyHeightM()))
                     .append(" m chimney, ")
@@ -294,7 +294,7 @@ public final class ConvectionTemplateExplainer {
         sb.append("### Conclusion — synthesis and research positioning\n\n");
         sb.append(String.format(Locale.US,
                 "> **Verdict:** Chimney convection is a **credible physics sketch**, not a deployment plan. "
-                        + "At reference scale (**%.0f m** stack, **%,.0f m²** contactors, **%.0f MW** waste heat) "
+                        + "At reference scale (**%.0f m** stack, **%,.0f m²** contactors, **%.1f MW** waste heat) "
                         + "passive draft moves **%.0f m³/s** (sweep range **%.0f–%.0f m³/s**), saves **%.2f MW** "
                         + "fan duty, and yields **%.0f t/yr** net CO₂ under grid scenario — roughly **%.0f× below** "
                         + "a 0.9 Mt/yr Keith-class plant, but aligned with the **side-gig philosophy**: use exhaust "
@@ -323,7 +323,7 @@ public final class ConvectionTemplateExplainer {
                         + "grid 0.39 kg/kWh) — consistent with solvent-DAC literature\n",
                 netPenaltyPct));
         sb.append(String.format(Locale.US,
-                "- **Fan substitution is real but small** — **%.2f MW** saved vs. **%.0f MW** hall heat — "
+                "- **Fan substitution is real but small** — **%.2f MW** saved vs. **%.1f MW** hall heat — "
                         + "Opex lever, not primary climate story\n\n",
                 ref.fanSavedMw(), ref.avgWasteHeatMw()));
 

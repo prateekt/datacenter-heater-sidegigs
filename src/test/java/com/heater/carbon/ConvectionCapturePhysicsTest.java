@@ -36,6 +36,23 @@ class ConvectionCapturePhysicsTest {
     }
 
     @Test
+    void largerContactorAreaIncreasesCaptureAndAirflow() {
+        ConvectionCaptureConfig small = referenceConfig();
+        small.contactorAreaM2 = 10_000.0;
+        ConvectionCaptureConfig large = referenceConfig();
+        large.contactorAreaM2 = 100_000.0;
+        double qWaste = 34_000_000.0;
+
+        var smallDraft = ConvectionCapturePhysics.solve(small, qWaste, 22.0);
+        var largeDraft = ConvectionCapturePhysics.solve(large, qWaste, 22.0);
+
+        assertTrue(largeDraft.captureRateKgS() > smallDraft.captureRateKgS() * 2.0,
+                "capture should scale well above 2× when contactor area grows 10×");
+        assertTrue(largeDraft.volumeFlowM3S() > smallDraft.volumeFlowM3S(),
+                "wider bed should lower resistance and increase draft");
+    }
+
+    @Test
     void zeroWasteHeatProducesNoDraft() {
         ConvectionCaptureConfig cfg = referenceConfig();
         var draft = ConvectionCapturePhysics.solve(cfg, 0, 22.0);

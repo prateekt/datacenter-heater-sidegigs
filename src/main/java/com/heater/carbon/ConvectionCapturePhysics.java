@@ -2,6 +2,9 @@ package com.heater.carbon;
 
 public final class ConvectionCapturePhysics {
 
+    /** Reference contactor area from `config/passive_convection_capture.yaml` defaults. */
+    public static final double REFERENCE_CONTACTOR_AREA_M2 = 50_000.0;
+
     private static final double CO2_MOLAR_MASS = 44.01;
     private static final double AIR_MOLAR_MASS = 28.97;
     private static final int MAX_ITER = 20;
@@ -51,7 +54,7 @@ public final class ConvectionCapturePhysics {
             }
 
             double buoyancyPa = buoyancyPressure(cfg, deltaT, tAmbK);
-            double mdotNew = Math.sqrt(Math.max(0.0, buoyancyPa / cfg.bedResistancePaS2Kg2));
+            double mdotNew = Math.sqrt(Math.max(0.0, buoyancyPa / effectiveBedResistance(cfg)));
             if (Math.abs(mdotNew - mdot) < TOL * Math.max(1.0, mdot)) {
                 mdot = mdotNew;
                 break;
@@ -64,7 +67,8 @@ public final class ConvectionCapturePhysics {
         }
 
         double buoyancyPa = buoyancyPressure(cfg, deltaT, tAmbK);
-        double resistancePa = cfg.bedResistancePaS2Kg2 * mdot * mdot;
+        double bedR = effectiveBedResistance(cfg);
+        double resistancePa = bedR * mdot * mdot;
         double volFlow = mdot / cfg.airDensityKgM3;
         double exhaustTempC = ambientTempC + deltaT;
 
@@ -94,7 +98,7 @@ public final class ConvectionCapturePhysics {
     private static double initialGuess(ConvectionCaptureConfig cfg, double qAir, double tAmbK) {
         double deltaTGuess = 15.0;
         double buoyancyPa = buoyancyPressure(cfg, deltaTGuess, tAmbK);
-        double mdotFromBuoyancy = Math.sqrt(Math.max(0.0, buoyancyPa / cfg.bedResistancePaS2Kg2));
+        double mdotFromBuoyancy = Math.sqrt(Math.max(0.0, buoyancyPa / effectiveBedResistance(cfg)));
         double mdotFromEnergy = qAir / (cfg.cpAir * deltaTGuess);
         return Math.max(mdotFromBuoyancy, mdotFromEnergy);
     }
@@ -110,10 +114,21 @@ public final class ConvectionCapturePhysics {
         return mdot * deltaPa / (rho * efficiency);
     }
 
+    /**
+     * Wider contactor beds lower pressure drop (parallel flow paths); capture scales with sorbent area.
+     */
+    static double effectiveBedResistance(ConvectionCaptureConfig cfg) {
+        if (cfg.contactorAreaM2 <= 0) {
+            return cfg.bedResistancePaS2Kg2;
+        }
+        double areaRatio = cfg.contactorAreaM2 / REFERENCE_CONTACTOR_AREA_M2;
+        return cfg.bedResistancePaS2Kg2 / Math.max(0.1, areaRatio);
+    }
+
     private static double captureRateKgS(ConvectionCaptureConfig cfg, double mdot) {
         double co2VolFrac = cfg.ambientCo2Ppm * 1e-6;
         double co2MassFrac = co2VolFrac * (CO2_MOLAR_MASS / AIR_MOLAR_MASS);
-        double areaFactor = Math.min(1.0, cfg.contactorAreaM2 / 10_000.0);
+        double areaFactor = cfg.contactorAreaM2 / REFERENCE_CONTACTOR_AREA_M2;
         return mdot * co2MassFrac * cfg.captureEfficiency * areaFactor;
     }
 

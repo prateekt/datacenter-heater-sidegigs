@@ -45,7 +45,9 @@ public final class TemplateExplainer {
                 "This is the central engineering lesson: **exhaust exists whether or not you can use it**. "
                         + "Oversizing compute without matched DAC, algae, or district-heat capacity yields diminishing "
                         + "returns — analogous to Keith et al. (2018) plant-sizing curves, but here the binding constraint "
-                        + "is thermal routing, not sorbent chemistry.");
+                        + "is thermal routing, not sorbent chemistry. Past saturation, **unrecovered exhaust** rises "
+                        + "(table below) — first-law waste minus delivered service, not overlapping dry-cooler duty.");
+        appendSaturationResultsTable(sb, summary);
         appendThermalChartSection(sb, summary, "multi_hall", "thermal_multi_hall.png",
                 "Chart 4 — Multi-hall campus rollout",
                 "NVIDIA-scale campus expansion",
@@ -72,7 +74,8 @@ public final class TemplateExplainer {
         sb.append("Each row is a **7-day simulation** annualized to one year. Capture plant, HX, and buffer **scale proportionally** ")
                 .append("with GPU count — so **capture yield** (thermal service ÷ exhaust) stays ~similar until saturation. ")
                 .append("**Multi-hall** numbers are **×N linear extrapolation** from one simulated hall (not separate campus plumbing). ")
-                .append("DAC-priority routing: algae MWh is ~0; rejected GWh is small when the regenerator keeps up.\n\n");
+                .append("DAC-priority routing: algae MWh is ~0; unrecovered exhaust stays small until heat multiplier ")
+                .append("exceeds fixed-plant capacity (see Chart 3 table).\n\n");
         appendThermalNarrative(sb, summary, "Lab footprint", "gpu_count_ramp", 5000, null);
         appendThermalNarrative(sb, summary, "Colossus-class hall", "gpu_generation", 25000, "B200_LC");
         appendThermalNarrative(sb, summary, "Regional campus", "multi_hall", 10, null);
@@ -233,6 +236,24 @@ public final class TemplateExplainer {
                     "**Highlighted point:** %s → **%.1f GWh/yr** thermal service at **%.0f MW** waste heat.\n\n",
                     h.label(), h.thermal().annualizedRecoveredGwh(), h.avgWasteHeatMw()));
         }
+    }
+
+    private static void appendSaturationResultsTable(StringBuilder sb, ResultsSummary summary) {
+        List<SweepPoint> pts = summary.bySweep("saturation");
+        if (pts.isEmpty()) {
+            return;
+        }
+        sb.append("| Heat multiplier | Thermal service (GWh/yr) | Unrecovered exhaust (GWh/yr) |\n");
+        sb.append("|-----------------|--------------------------|------------------------------|\n");
+        for (SweepPoint p : pts) {
+            ThermalReport t = p.thermal();
+            sb.append(String.format(Locale.US,
+                    "| %s | **%.1f** | **%.1f** |\n",
+                    p.label(),
+                    t.annualizedRecoveredGwh(),
+                    t.rejectedMwh() / 1000.0));
+        }
+        sb.append("\n");
     }
 
     private static void appendThermalLoadSplitSection(StringBuilder sb, ResultsSummary summary) {
@@ -620,7 +641,11 @@ public final class TemplateExplainer {
 
         sb.append("<a id=\"secondary-heat-applications\"></a>\n\n");
         sb.append("### Secondary heat applications — pools, fisheries, showers, community heat\n\n");
-        sb.append("The same **~34 MW** waste-heat stream can be routed to **DAC**, **heated pools**, **aquaculture raceways**, **algae**, or **shelter hot showers** ")
+        SweepPoint refHall = findByProfile(summary, "gpu_generation", "B200_LC");
+        double refMw = refHall != null ? refHall.avgWasteHeatMw() : 33.75;
+        sb.append(String.format(Locale.US,
+                "The same **~%.1f MW** waste-heat stream can be routed to **DAC**, **heated pools**, **aquaculture raceways**, **algae**, or **shelter hot showers** ",
+                refMw))
                 .append("(MVP: **one valve path at a time** — robot `priority` in each YAML). ")
                 .append("**Routed MWh** comes from the simulator; **pools / fisheries / algae lines are zero** when that load is not in the priority list ")
                 .append("(e.g. `nvidia_us_expansion.yaml` sends everything to DAC). ")

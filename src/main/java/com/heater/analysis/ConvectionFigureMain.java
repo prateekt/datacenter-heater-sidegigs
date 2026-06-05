@@ -52,6 +52,10 @@ public final class ConvectionFigureMain {
 
         if (patchReadme && Files.exists(readmePath)) {
             ReadmePatcher.patchConvection(readmePath, markdown);
+            ReadmeIntroPatcher.patchFromJson(
+                    readmePath,
+                    Path.of("docs/results_summary.json"),
+                    resultsPath);
             System.out.println("Patched " + readmePath);
         }
     }

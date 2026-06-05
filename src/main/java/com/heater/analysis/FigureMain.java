@@ -47,6 +47,10 @@ public final class FigureMain {
 
         if (readmePath != null && Files.exists(readmePath)) {
             ReadmePatcher.patch(readmePath, markdown);
+            ReadmeIntroPatcher.patchFromJson(
+                    readmePath,
+                    resultsPath,
+                    Path.of("docs/convection_summary.json"));
             System.out.println("Patched " + readmePath);
         }
 

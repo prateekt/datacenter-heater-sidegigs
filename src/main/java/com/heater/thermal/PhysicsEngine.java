@@ -95,7 +95,9 @@ public final class PhysicsEngine {
         double qDelivered = qPool + qAqua + qHouse + qAlgae + qDac;
         qDelivered = Math.min(qDelivered, hx.qTransferW() + capture.qSourceDrawW());
         state.energyRecoveredJ += qDelivered * dt;
-        state.energyRejectedJ += qReject * dt;
+        // First-law balance: do not count dry-cooler duty that overlaps with delivered service.
+        double qRejected = Math.max(0.0, Math.min(qReject, state.primary.qWaste - qDelivered));
+        state.energyRejectedJ += qRejected * dt;
 
         if (state.primary.tOut > cfg.primaryTMax) {
             state.primaryUnsafeTimeS += dt;

@@ -95,15 +95,17 @@ We added a **separate, labeled experiment** for this idea. Warm exhaust creates 
 
 ---
 
+<!-- INTRO:BEGIN — synced from docs/results_summary.json; do not edit -->
 ## Side gig results (NVIDIA U.S.)
 
-**TL;DR:** One **25,000-GPU** hall's exhaust could run a serious **side gig** — **~34 MW** of waste heat delivering **~71 GWh/yr** of usable thermal service, enough for **~28 million shelter hot showers/year** or colocated DAC/algae. *Grid scenario:* ~38,000 tonnes CO₂/yr net removed.
+**TL;DR:** One **25,000-GPU** hall's exhaust could run a serious **side gig** — **~33.8 MW** of waste heat delivering **~70.9 GWh/yr** of usable thermal service, enough for **~28.4 million shelter hot showers/yr (~77,718/day)** or colocated DAC/algae. *Grid scenario:* ~37,776 tonnes CO₂/yr net removed.
 
 Full thermal charts, downstream trade-offs, and the grid-dependent carbon appendix are in [Full analysis](#scalability-charts) below. Auto-generated when you run `./gradlew generateFigures`.
 
 For a balanced DAC + algae rotation (one pipe at a time), see [balanced run](#balanced-dac--algae) in [Try it yourself](#try-it-yourself).
 
 **Speculative chimney DAC (reference hall, 120 m tower):** ~**267 m³/s** natural draft, ~**0.08 MW** fan electricity saved, ~**630 tonnes CO₂/yr net** in the grid scenario — see [full plain-English breakdown](#convection-speculative).
+<!-- INTRO:END -->
 
 ---
 
@@ -117,7 +119,7 @@ For a balanced DAC + algae rotation (one pipe at a time), see [balanced run](#ba
 | Blackwell Ultra | forecast | ~1,550 W | hotter next-gen Blackwell |
 | Vera Rubin Max-P | forecast | ~2,550 W | ~25 light bulbs — liquid-only forecast |
 
-**Reference hall:** **25,000 B200 (liquid) GPUs** ≈ **34 MW** waste heat (`25,000 × 1.35 kW`).
+**Reference hall:** **25,000 B200 (liquid) GPUs** ≈ **33.75 MW** waste heat (`25,000 × 1.35 kW`).
 
 ### Hall size sources (why 25k, not 37k)
 
@@ -251,9 +253,20 @@ If this heat powers DAC on today's U.S. grid: **~37,776 tonnes CO₂e/yr** net r
 
 **Read:** Pasting more GPUs onto a hall **without** scaling capture plant hits a **thermal service plateau**.
 
-**Interpretation:** This is the central engineering lesson: **exhaust exists whether or not you can use it**. Oversizing compute without matched DAC, algae, or district-heat capacity yields diminishing returns — analogous to Keith et al. (2018) plant-sizing curves, but here the binding constraint is thermal routing, not sorbent chemistry.
+**Interpretation:** This is the central engineering lesson: **exhaust exists whether or not you can use it**. Oversizing compute without matched DAC, algae, or district-heat capacity yields diminishing returns — analogous to Keith et al. (2018) plant-sizing curves, but here the binding constraint is thermal routing, not sorbent chemistry. Past saturation, **unrecovered exhaust** rises (table below) — first-law waste minus delivered service, not overlapping dry-cooler duty.
 
 **Highlighted point:** 1.3x heat (31250 GPUs equiv.) → **70.6 GWh/yr** thermal service at **30 MW** waste heat.
+
+| Heat multiplier | Thermal service (GWh/yr) | Unrecovered exhaust (GWh/yr) |
+|-----------------|--------------------------|------------------------------|
+| 0.3x heat (7500 GPUs equiv.) | **22.3** | **0.0** |
+| 0.5x heat (12500 GPUs equiv.) | **22.3** | **0.0** |
+| 0.8x heat (18750 GPUs equiv.) | **54.8** | **0.1** |
+| 1.0x heat (25000 GPUs equiv.) | **69.4** | **0.1** |
+| 1.3x heat (31250 GPUs equiv.) | **70.6** | **0.1** |
+| 1.5x heat (37500 GPUs equiv.) | **70.9** | **0.1** |
+| 1.8x heat (43750 GPUs equiv.) | **70.9** | **0.1** |
+| 2.0x heat (50000 GPUs equiv.) | **70.9** | **355.0** |
 
 ### Chart 4 — Multi-hall campus rollout
 
@@ -289,7 +302,7 @@ If this heat powers DAC on today's U.S. grid: **~37,776 tonnes CO₂e/yr** net r
 
 ### Secondary heat applications — pools, fisheries, showers, community heat
 
-The same **~34 MW** waste-heat stream can be routed to **DAC**, **heated pools**, **aquaculture raceways**, **algae**, or **shelter hot showers** (MVP: **one valve path at a time** — robot `priority` in each YAML). **Routed MWh** comes from the simulator; **pools / fisheries / algae lines are zero** when that load is not in the priority list (e.g. `nvidia_us_expansion.yaml` sends everything to DAC). **Homes** and **hot showers** are *hypothetical redirects* of the same total MWh — not simultaneous loads.
+The same **~33.8 MW** waste-heat stream can be routed to **DAC**, **heated pools**, **aquaculture raceways**, **algae**, or **shelter hot showers** (MVP: **one valve path at a time** — robot `priority` in each YAML). **Routed MWh** comes from the simulator; **pools / fisheries / algae lines are zero** when that load is not in the priority list (e.g. `nvidia_us_expansion.yaml` sends everything to DAC). **Homes** and **hot showers** are *hypothetical redirects* of the same total MWh — not simultaneous loads.
 
 | Priority scenario | Robot order | Routed MWh/yr (pool · fish · algae · DAC) | Net CO₂e (t/yr) |
 |-------------------|-------------|----------------------------------------|-----------------|
@@ -324,7 +337,7 @@ The same **~34 MW** waste-heat stream can be routed to **DAC**, **heated pools**
 
 ### Scenario narratives
 
-Each row is a **7-day simulation** annualized to one year. Capture plant, HX, and buffer **scale proportionally** with GPU count — so **capture yield** (thermal service ÷ exhaust) stays ~similar until saturation. **Multi-hall** numbers are **×N linear extrapolation** from one simulated hall (not separate campus plumbing). DAC-priority routing: algae MWh is ~0; rejected GWh is small when the regenerator keeps up.
+Each row is a **7-day simulation** annualized to one year. Capture plant, HX, and buffer **scale proportionally** with GPU count — so **capture yield** (thermal service ÷ exhaust) stays ~similar until saturation. **Multi-hall** numbers are **×N linear extrapolation** from one simulated hall (not separate campus plumbing). DAC-priority routing: algae MWh is ~0; unrecovered exhaust stays small until heat multiplier exceeds fixed-plant capacity (see Chart 3 table).
 
 **Lab footprint** — 5,000 × H100 SXM. **9.98 GWh/yr** thermal service from **4.75 MW** avg waste heat (**24.0% capture yield** of **41.6 GWh/yr** continuous exhaust). Split: DAC **9.98** · algae **0.00** · rejected **0.019 GWh/yr**. Grid scenario: **5,317 t CO₂e/yr** net.
 
@@ -470,7 +483,7 @@ As the U.S. grid decarbonizes, **GPU operational CO₂ falls** but **waste heat 
 
 **Pools, fisheries, showers vs. DAC?** Same exhaust, different router priority — a **policy choice** about where to send thermal service before dissipation.
 
-### Generated at: 2026-06-05T10:45:48.938174Z
+### Generated at: 2026-06-05T10:48:53.165203Z
 
 ### Sources
 
@@ -653,11 +666,11 @@ Annualized net removal: ... tonnes CO2e/yr
 
 | Complicated word | Think of it like… |
 |------------------|-------------------|
+| Fans | The chimney does part of the leaf-blower's job. |
 | CO₂ capture sponge | A sponge in the air that grabs CO₂ molecules. |
 | Convection / chimney | Hot air rises like steam from soup — it pulls more air along. |
 | Regeneration | Heating the sponge to squeeze the CO₂ out, like wringing a towel. |
 | Waste heat | Computers get hot like a game console — that warmth is waste heat. |
-| Fans | The chimney does part of the leaf-blower's job. |
 
 ### What the simulation tried (still experimental in real life)
 
@@ -681,7 +694,7 @@ Annualized net removal: ... tonnes CO2e/yr
 
 ### Then the numbers
 
-**Reference hall** (~40 MW waste heat, 120 m chimney, 50000 m² contactors):
+**Reference hall** (~39.5 MW waste heat, 120 m chimney, 50000 m² contactors):
 
 | Metric | Value |
 |--------|-------|
@@ -703,7 +716,7 @@ Annualized net removal: ... tonnes CO2e/yr
 
 **Airflow vs. chimney height** — Draft scales with stack height per buoyancy theory (Zandian & Ashjaee, 2013). Sweep spans **30–200 m** → **168–317 m³/s**, confirming that taller warm columns materially increase passive throughput — the same lever cooling towers use, repurposed for CO₂ contact.
 
-**CO₂ vs. contactor area** — Capture rate tracks sorbent face area until mass-transfer or regeneration duty binds. **10,000–100,000 m²** spans **774–774 t/yr** gross — linear at this lumped fidelity, but still **orders of magnitude** below Mt-scale DAC literature (Keith 2018; McQueen 2021).
+**CO₂ vs. contactor area** — Capture rate tracks sorbent face area until mass-transfer or regeneration duty binds. **10,000–100,000 m²** spans **91–1950 t/yr** gross — linear at this lumped fidelity, but still **orders of magnitude** below Mt-scale DAC literature (Keith 2018; McQueen 2021).
 
 **Fan savings vs. waste-heat coupling** — Fraction of hall heat routed to the air chimney (**10–50%** of **40 MW**) drives ΔT and draft. Fan duty falls from **0.02 to 0.12 MW** — modest in absolute terms because baseline fan power is small at this contactor resistance, but directionally consistent with passive-air DAC concepts (Lackner 2018).
 
@@ -808,7 +821,7 @@ Zandian 2013) rather than building new nuclear capacity to feed DAC.
 
 ### Conclusion — synthesis and research positioning
 
-> **Verdict:** Chimney convection is a **credible physics sketch**, not a deployment plan. At reference scale (**120 m** stack, **50,000 m²** contactors, **40 MW** waste heat) passive draft moves **267 m³/s** (sweep range **168–317 m³/s**), saves **0.08 MW** fan duty, and yields **630 t/yr** net CO₂ under grid scenario — roughly **1163× below** a 0.9 Mt/yr Keith-class plant, but aligned with the **side-gig philosophy**: use exhaust already on site before building new energy infrastructure.
+> **Verdict:** Chimney convection is a **credible physics sketch**, not a deployment plan. At reference scale (**120 m** stack, **50,000 m²** contactors, **39.5 MW** waste heat) passive draft moves **267 m³/s** (sweep range **168–317 m³/s**), saves **0.08 MW** fan duty, and yields **630 t/yr** net CO₂ under grid scenario — roughly **1163× below** a 0.9 Mt/yr Keith-class plant, but aligned with the **side-gig philosophy**: use exhaust already on site before building new energy infrastructure.
 
 #### Scholarly synthesis
 
@@ -819,7 +832,7 @@ This module occupies a **deliberate gap** in the literature: Hamblin et al. (202
 - **Height sensitivity** — taller chimneys increase draft monotonically in our sweep (168–317 m³/s)
 - **Contactor area dominates throughput** — **774 t/yr** gross at reference **50,000 m²** face
 - **Regeneration penalty** — **19%** gross-to-net gap from heat-pump electricity (5.5 GJ/t duty, grid 0.39 kg/kWh) — consistent with solvent-DAC literature
-- **Fan substitution is real but small** — **0.08 MW** saved vs. **40 MW** hall heat — Opex lever, not primary climate story
+- **Fan substitution is real but small** — **0.08 MW** saved vs. **39.5 MW** hall heat — Opex lever, not primary climate story
 
 #### What it does not support
 
@@ -842,7 +855,7 @@ Treat this module as **structured speculation**: physics plausible, economics un
 - Liquid-cooled halls may need extra steps to warm the air chimney
 - Speculative — physics is plausible, real plants are not built yet. Computer experiment only.
 
-### Generated at: 2026-06-05T10:38:52.103694Z
+### Generated at: 2026-06-05T10:49:04.246930Z
 
 ### Sources
 
