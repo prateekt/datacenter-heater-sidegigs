@@ -1,6 +1,6 @@
 <p align="center">
   <strong>Data Center Heater Side Gig</strong><br>
-  <em>Job 1: cool the GPUs. Side gig: put that exhaust to work — DAC, algae, shelter showers, acoustic soundscapes.</em>
+  <em>Job 1: cool the GPUs. Side gig: put that exhaust to work — DAC, algae, shelter showers, plastic recycling, acoustic soundscapes.</em>
 </p>
 
 <p align="center">
@@ -39,7 +39,7 @@ Companies like **NVIDIA** are building huge **data centers** full of powerful **
 3. Report **MW**, **GWh/yr**, and **temperature grades** (grid-agnostic). Grid-dependent CO₂ accounting is a separate, labeled scenario.
 4. *(Speculative)* Model **chimney convection** — warm exhaust rising through giant CO₂-catching walls, reducing fan power.
 
-Read [The big idea](#the-big-idea), then [Side gig results](#what-we-found-nvidia-us). For the experimental air-side path, see [Chimney DAC](#convection-speculative).
+Read [The big idea](#the-big-idea), then [Side gig results](#what-we-found-nvidia-us). For colocated MRF / enzymatic PET, see [Plastic recycling](#plastic-recycling-speculative). For the experimental air-side path, see [Chimney DAC](#convection-speculative).
 
 ---
 
