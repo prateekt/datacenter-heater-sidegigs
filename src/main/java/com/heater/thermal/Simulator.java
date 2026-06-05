@@ -39,6 +39,8 @@ public final class Simulator {
     private double sumAquacultureTemp;
     private double sumAlgaeTemp;
     private double sumPrimaryTOut;
+    private double sumConvectionAirflow;
+    private double sumFanSaved;
 
     public Simulator(Map<String, Object> config) {
         this.config = config;
@@ -105,6 +107,7 @@ public final class Simulator {
         physics.applyHxAndLoads(state, actuators, dt);
         trackSatisfaction();
         trackTemperatures();
+        trackConvection();
         state.time += dt;
         state.totalSteps++;
         totalSteps++;
@@ -128,6 +131,8 @@ public final class Simulator {
 
     public SimulationMetrics metrics() {
         int total = Math.max(1, totalSteps);
+        double simDuration = lastSimDuration > 0 ? lastSimDuration : state.time;
+        double annualFactor = simDuration > 0 ? (365.0 * 86400.0 / simDuration) : 0.0;
         return new SimulationMetrics(
                 state.energyRecoveredJ / 3_600_000.0,
                 state.energyRejectedJ / 3_600_000.0,
@@ -136,7 +141,10 @@ public final class Simulator {
                 100.0 * houseInBandSteps / total,
                 totalSteps,
                 List.copyOf(router.taskLog),
-                climateCalc.report(state, lastSimDuration > 0 ? lastSimDuration : state.time)
+                climateCalc.report(state, simDuration),
+                totalSteps > 0 ? sumConvectionAirflow / totalSteps : 0.0,
+                totalSteps > 0 ? (sumFanSaved / totalSteps) / 1_000_000.0 : 0.0,
+                state.convectionCo2CapturedKg * annualFactor / 1000.0
         );
     }
 
@@ -189,12 +197,33 @@ public final class Simulator {
         return totalSteps > 0 ? sumPrimaryTOut / totalSteps : 0.0;
     }
 
+    private void trackConvection() {
+        if (state.passiveConvection.enabled) {
+            sumConvectionAirflow += state.passiveConvection.airflowM3S;
+            sumFanSaved += state.passiveConvection.fanSavedW;
+        }
+    }
+
+    public double meanConvectionAirflowM3s() {
+        return totalSteps > 0 ? sumConvectionAirflow / totalSteps : 0.0;
+    }
+
+    public double meanFanPowerSavedMw() {
+        return totalSteps > 0 ? (sumFanSaved / totalSteps) / 1_000_000.0 : 0.0;
+    }
+
+    public double meanConvectionCo2TonnesYr(double simDurationS) {
+        double annualFactor = simDurationS > 0 ? (365.0 * 86400.0 / simDurationS) : 0.0;
+        return state.convectionCo2CapturedKg * annualFactor / 1000.0;
+    }
+
     private static PhysicsConfig physicsConfigFromYaml(Map<String, Object> config) {
         PhysicsConfig cfg = new PhysicsConfig();
         cfg.cpWater = ConfigLoader.d(ConfigLoader.map(config, "physics"), "cp_water", 4186.0);
         cfg.uaHx = ConfigLoader.d(ConfigLoader.map(config, "heat_exchanger"), "ua", 80_000.0);
         cfg.rejectCapacity = ConfigLoader.d(ConfigLoader.map(config, "primary_loop"), "reject_capacity", 500_000.0);
         cfg.primaryTMax = ConfigLoader.d(ConfigLoader.map(config, "primary_loop"), "t_max", 65.0);
+        cfg.convection = com.heater.carbon.ConvectionCaptureConfig.fromYaml(config);
         return cfg;
     }
 

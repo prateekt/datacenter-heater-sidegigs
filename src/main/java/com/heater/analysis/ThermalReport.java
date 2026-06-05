@@ -19,7 +19,10 @@ public record ThermalReport(
         double meanPoolTempC,
         double meanAquacultureTempC,
         double meanAlgaeTempC,
-        double meanPrimaryTOutC
+        double meanPrimaryTOutC,
+        double convectionAirflowM3s,
+        double fanPowerSavedMw,
+        double convectionCo2TonnesYr
 ) {
 
     public double annualizedRecoveredGwh() {
@@ -43,7 +46,10 @@ public record ThermalReport(
                 meanPoolTempC,
                 meanAquacultureTempC,
                 meanAlgaeTempC,
-                meanPrimaryTOutC
+                meanPrimaryTOutC,
+                convectionAirflowM3s,
+                fanPowerSavedMw,
+                convectionCo2TonnesYr * factor
         );
     }
 
@@ -71,7 +77,10 @@ public record ThermalReport(
                 sim.meanPoolTempC(),
                 sim.meanAquacultureTempC(),
                 sim.meanAlgaeTempC(),
-                sim.meanPrimaryTOutC()
+                sim.meanPrimaryTOutC(),
+                sim.meanConvectionAirflowM3s(),
+                sim.meanFanPowerSavedMw(),
+                sim.meanConvectionCo2TonnesYr(simDurationS)
         );
         return halls == 1 ? base : base.multiply(halls);
     }

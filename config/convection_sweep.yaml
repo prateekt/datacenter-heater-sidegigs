@@ -1,0 +1,30 @@
+# Sweeps for speculative passive convection DAC analysis
+sim_duration_s: 604800
+q_waste_avg_w: 39523125.0    # avg of 25k B200 hall base/peak
+ambient_temp_c: 22.0
+source_temp_c: 45.0
+reference_chimney_height_m: 120
+reference_contactor_area_m2: 50000
+
+chimney_heights_m:
+  - 30
+  - 60
+  - 90
+  - 120
+  - 160
+  - 200
+
+contactor_areas_m2:
+  - 10000
+  - 25000
+  - 50000
+  - 100000
+
+waste_heat_fractions:
+  - 0.10
+  - 0.20
+  - 0.35
+  - 0.50
+
+capture_defaults: config/passive_convection_capture.yaml
+analogies: config/convection_analogies.yaml

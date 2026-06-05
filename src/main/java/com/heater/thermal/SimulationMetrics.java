@@ -13,5 +13,8 @@ public record SimulationMetrics(
         double houseSatisfactionPct,
         int steps,
         List<RobotTaskLog> robotEvents,
-        ClimateImpactCalculator.ClimateReport climate
+        ClimateImpactCalculator.ClimateReport climate,
+        double convectionAirflowM3s,
+        double fanPowerSavedMw,
+        double convectionCo2CapturedTonnesYr
 ) {}

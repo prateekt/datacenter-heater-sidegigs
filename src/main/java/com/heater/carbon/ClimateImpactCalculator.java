@@ -30,7 +30,8 @@ public final class ClimateImpactCalculator {
         double algae = state.algae.co2FixedKg;
         double gross = dac + algae;
         double heatPumpKwh = state.heatPumpElectricJ / 3_600_000.0;
-        double penalty = heatPumpKwh * gridCo2KgPerKwh;
+        double fanKwh = state.fanElectricJ / 3_600_000.0;
+        double penalty = (heatPumpKwh + fanKwh) * gridCo2KgPerKwh;
         double net = gross - penalty;
 
         double annualFactor = simDurationS > 0 ? (365.0 * 86400.0 / simDurationS) : 0.0;

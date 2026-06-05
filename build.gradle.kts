@@ -43,3 +43,11 @@ tasks.register<JavaExec>("generateFigures") {
     mainClass.set("com.heater.analysis.FigureMain")
     workingDir = projectDir
 }
+
+tasks.register<JavaExec>("generateConvectionFigures") {
+    group = "documentation"
+    description = "Run speculative convection DAC sweeps, charts, and patch README"
+    classpath = sourceSets.main.get().runtimeClasspath
+    mainClass.set("com.heater.analysis.ConvectionFigureMain")
+    workingDir = projectDir
+}

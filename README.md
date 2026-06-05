@@ -8,6 +8,7 @@
   <a href="#the-big-idea">Big idea</a> ·
   <a href="#what-we-found-nvidia-us">Thermal results</a> ·
   <a href="#scalability-charts">Full analysis</a> ·
+  <a href="#convection-speculative">Chimney DAC</a> ·
   <a href="#how-the-simulation-works">Methods</a> ·
   <a href="#try-it-yourself">Run it</a> ·
   <a href="#glossary">Glossary</a>
@@ -32,8 +33,9 @@ Companies like **NVIDIA** are building huge **data centers** full of powerful **
 1. Capture hot water from liquid-cooled GPU loops.
 2. Deliver thermal service to **DAC**, **algae**, **pools**, **fisheries**, **shelter showers**, and more.
 3. Report **MW**, **GWh/yr**, and **temperature grades** (grid-agnostic). Grid-dependent CO₂ accounting is a separate, labeled scenario.
+4. *(Speculative)* Model **chimney convection** — warm exhaust rising through giant CO₂-catching walls, reducing fan power.
 
-Read [The big idea](#the-big-idea), then [Thermal results](#what-we-found-nvidia-us).
+Read [The big idea](#the-big-idea), then [Thermal results](#what-we-found-nvidia-us). For the experimental air-side path, see [Chimney DAC](#convection-speculative).
 
 ---
 
@@ -72,6 +74,12 @@ flowchart TB
 
 A **robotic controller** in our simulation decides *where* to send the heat: carbon capture, algae, storage, or emergency cooling — similar to how a smart thermostat picks where warmth should go.
 
+### Speculative side path: chimney CO₂ capture
+
+> **Think of it like this:** A data center is already a giant hair dryer. What if that warm air climbed a tall chimney and pulled outdoor air through CO₂-catching sponges — so you need fewer electric fans?
+
+We added a **separate, labeled experiment** for this idea. Warm exhaust creates natural **convection** (like steam rising from soup). Air flows through passive **sorbent** walls. A **heat pump** still wrings the sponge out on a schedule — same regeneration story as liquid DAC. **Nobody has built this at campus scale yet**; our math is a cartoon, not a blueprint. Results are in [Chimney DAC (explain like I'm five)](#convection-speculative).
+
 ---
 
 ## What we found (NVIDIA U.S.)
@@ -81,6 +89,8 @@ A **robotic controller** in our simulation decides *where* to send the heat: car
 Full thermal charts, downstream trade-offs, and the grid-dependent carbon appendix are in [Full analysis](#scalability-charts) below. Auto-generated when you run `./gradlew generateFigures`.
 
 For a balanced DAC + algae rotation (one pipe at a time), see [balanced run](#balanced-dac--algae) in [Try it yourself](#try-it-yourself).
+
+**Speculative chimney DAC (reference hall, 120 m tower):** ~**267 m³/s** natural draft, ~**0.08 MW** fan electricity saved, ~**630 tonnes CO₂/yr net** in the grid scenario — see [full plain-English breakdown](#convection-speculative).
 
 ---
 
@@ -412,7 +422,7 @@ As the U.S. grid decarbonizes, **GPU operational CO₂ falls** but **waste heat 
 
 **Pools, fisheries, showers vs. DAC?** Same exhaust, different router priority — a **policy choice** about where to send thermal service before dissipation.
 
-### Generated at: 2026-06-05T10:17:58.659653Z
+### Generated at: 2026-06-05T10:28:04.149527Z
 
 ### Sources
 
@@ -500,8 +510,20 @@ We report:
 | 30-day / annualized scaling | Full 365-day weather file per city |
 | U.S. average grid emissions | Hour-by-hour grid greenness |
 | One load connected at a time | Parallel pipes to all systems |
+| *(Speculative)* Chimney convection DAC | CFD, real sorbent chemistry, built campus pilots |
 
-Assumptions are documented in [`config/nvidia_us_expansion.yaml`](config/nvidia_us_expansion.yaml).
+Assumptions are documented in [`config/nvidia_us_expansion.yaml`](config/nvidia_us_expansion.yaml) and [`config/passive_convection_capture.yaml`](config/passive_convection_capture.yaml).
+
+### Step 7 — Speculative chimney convection (optional module)
+
+A separate air-side experiment asks: *can warm exhaust pull air through CO₂-catching walls without as many fans?*
+
+1. Some **reject heat** warms a tall chimney (stack effect — hot air rises).
+2. Rising air sucks outdoor air through **sorbent contactors** (adsorb phase, ~8 h).
+3. A **heat pump** regenerates the sorbent on a schedule (~2 h) — same liquid-loop story as Step 3.
+4. We compare **fan baseline** vs **convection-assisted** fan power and count net CO₂.
+
+Plain-English results: [Chimney DAC](#convection-speculative). Regenerate with `./gradlew generateConvectionFigures`.
 
 ---
 
@@ -533,6 +555,20 @@ Rotation between algae and carbon capture (one pipe at a time in this MVP):
 ./gradlew run --args="--config config/nvidia_us_algae.yaml --scenario nvidia_us_module"
 ```
 
+### Speculative convection DAC (30 simulated days)
+
+Passive chimney airflow through CO₂-catching walls — experimental idea, not deployed at scale:
+
+```bash
+./gradlew run --args="--config config/nvidia_us_convection.yaml --scenario nvidia_us_module --fast"
+```
+
+Regenerate convection charts and kindergarten-level README section:
+
+```bash
+./gradlew generateConvectionFigures
+```
+
 ### Regenerate scalability charts and README results
 
 Runs 7-day sweeps, writes PNGs to `docs/figures/`, updates `docs/results_summary.json`, and patches the [scalability section](#scalability-charts) (LLM if `OPENAI_API_KEY` is set, otherwise template fallback):
@@ -556,6 +592,84 @@ Annualized net removal: ... tonnes CO2e/yr
 
 ---
 
+<a id="convection-speculative"></a>
+
+<!-- CONVECTION:BEGIN — auto-generated by ./gradlew generateConvectionFigures; do not edit -->
+## Speculative idea: chimney CO₂ capture (explain like I'm five)
+
+*Auto-generated **speculative** results — passive convection through giant CO₂-catching walls. Not mixed with main thermal results. See [Glossary](#glossary) for simple definitions.*
+
+> **In one sentence:** Warm exhaust rises like a chimney and drags air through CO₂-catching walls — so we need fewer electric fans.
+
+### Picture this
+
+| Complicated word | Think of it like… |
+|------------------|-------------------|
+| Waste heat | Computers get hot like a game console — that warmth is waste heat. |
+| Regeneration | Heating the sponge to squeeze the CO₂ out, like wringing a towel. |
+| Convection / chimney | Hot air rises like steam from soup — it pulls more air along. |
+| CO₂ capture sponge | A sponge in the air that grabs CO₂ molecules. |
+| Fans | The chimney does part of the leaf-blower's job. |
+
+### What the simulation tried (still experimental in real life)
+
+1. GPUs make heat → some goes into a tall warm chimney
+2. Rising warm air sucks outdoor air through giant capture walls
+3. Sponges fill up → heat pump squeezes CO₂ out (same as our liquid DAC model)
+4. Count CO₂ caught, fans saved, electricity still needed
+
+### Results in plain English
+
+| Question a kid might ask | What we found |
+|--------------------------|---------------|
+| Is the data center a heater? | Yes. Almost all the electricity becomes heat. |
+| Why a tall tower? | Taller warm column = stronger upward pull. |
+| Do we still need fans? | Usually yes, but smaller or weaker ones. |
+| Do we still need hot water for the sponge? | Yes — catching is passive; squeezing still needs heat. |
+| Did we build this for real? | No. This is a computer experiment only. |
+| How much air does the chimney pull? | About **267 m³/s** at our reference size |
+| How much fan electricity do we save? | About **0.08 MW** vs. fan-only baseline |
+| How much CO₂ per year (computer guess)? | **630 tonnes net** after electricity penalty |
+
+### Then the numbers
+
+**Reference hall** (~40 MW waste heat, 120 m chimney, 50000 m² contactors):
+
+| Metric | Value |
+|--------|-------|
+| Airflow | **267 m³/s** |
+| Exhaust ΔT | **42.9 K** above ambient |
+| Fan baseline | **0.08 MW** |
+| Fan with convection | **0.00 MW** |
+| Fan saved | **0.08 MW** |
+| Gross CO₂ captured | **774 t/yr** |
+| Net CO₂ (grid scenario) | **630 t/yr** |
+
+![convection airflow vs height](docs/figures/convection_airflow_vs_height.png)
+
+![convection co2 vs height](docs/figures/convection_co2_vs_height.png)
+
+![convection fan savings](docs/figures/convection_fan_savings.png)
+
+### Honest limits
+
+- Nobody runs this at campus scale yet
+- Our math is a cartoon, not a blueprint
+- Liquid-cooled halls may need extra steps to warm the air chimney
+- Speculative — physics is plausible, real plants are not built yet. Computer experiment only.
+
+### Generated at: 2026-06-05T10:28:09.352120Z
+
+### Sources
+
+- Physics: lumped buoyancy + porous-bed resistance (`src/main/java/com/heater/carbon/ConvectionCapturePhysics.java`)
+- Defaults: `config/passive_convection_capture.yaml`
+- Analogies: `config/convection_analogies.yaml`
+- Speculative — physics is plausible, real plants are not built yet. Computer experiment only.
+<!-- CONVECTION:END -->
+
+---
+
 ## Project map
 
 ```
@@ -565,11 +679,16 @@ datacenter-heater-sidegig/
 │   ├── default.yaml                   demo / classroom scale
 │   ├── nvidia_us_expansion.yaml       50 MW U.S. hall (DAC priority)
 │   ├── nvidia_us_algae.yaml           50 MW hall (rotation)
+│   ├── nvidia_us_convection.yaml      speculative chimney DAC
+│   ├── passive_convection_capture.yaml  convection defaults
+│   ├── convection_sweep.yaml          convection sweep parameters
+│   ├── convection_analogies.yaml      kindergarten explainers
 │   ├── gpu_profiles.yaml              NVIDIA SKU thermal profiles
 │   └── scalability_sweep.yaml         sweep parameters for figures
 ├── docs/
-│   ├── figures/                       scalability PNGs (generateFigures)
-│   └── results_summary.json           machine-readable sweep output
+│   ├── figures/                       scalability + convection PNGs
+│   ├── results_summary.json           machine-readable thermal sweep output
+│   └── convection_summary.json        speculative chimney DAC sweep output
 └── src/main/java/com/heater/
     ├── App.java                       CLI
     ├── analysis/                      sweeps, charts, README explainer
@@ -596,6 +715,10 @@ datacenter-heater-sidegig/
 | **Tonne** | 1,000 kg — used for CO₂ mass (1 tonne ≈ 2,204 lbs) |
 | **Simulation** | A computer experiment that mimics reality with math |
 | **Net removal** | CO₂ pulled out minus CO₂ emitted to run equipment |
+| **Convection** | Warm air rises and cooler air moves in to take its place |
+| **Chimney effect** | Using rising warm air to pull air through a tube or tower |
+| **Sorbent** | A material that temporarily holds onto CO₂ from passing air |
+| **Air contactor** | The big wall or tower where air meets the sorbent |
 
 ---
 

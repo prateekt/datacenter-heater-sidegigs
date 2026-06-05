@@ -3,6 +3,7 @@ package com.heater;
 import com.heater.analysis.HeatApplicationAnalyzer;
 import com.heater.analysis.ThermalReport;
 import com.heater.carbon.ClimateImpactCalculator;
+import com.heater.carbon.ConvectionCaptureConfig;
 import com.heater.config.ConfigLoader;
 import com.heater.robot.RobotTaskLog;
 import com.heater.thermal.ScenarioProfile;
@@ -85,6 +86,15 @@ public final class App {
         System.out.printf("Mean GPU loop out:      %.1f C%n", thermal.meanPrimaryTOutC());
         System.out.printf("Shelter showers equiv:  %s%n",
                 HeatApplicationAnalyzer.formatHotShowers(thermal.recoveredMwh() * 1000.0 / 2.5));
+
+        ConvectionCaptureConfig convection = ConvectionCaptureConfig.fromYaml(config);
+        if (convection.convectionHybrid()) {
+            System.out.println();
+            System.out.println("--- Speculative convection DAC ---");
+            System.out.printf("Mean airflow:           %.1f m3/s%n", metrics.convectionAirflowM3s());
+            System.out.printf("Fan power saved:        %.3f MW%n", metrics.fanPowerSavedMw());
+            System.out.printf("Convection CO2 (ann.):  %.1f tonnes/yr%n", metrics.convectionCo2CapturedTonnesYr());
+        }
         System.out.println();
         System.out.printf("--- Grid scenario (%.2f kg CO2/kWh) ---%n", gridKg);
         System.out.printf("DAC CO2 captured:       %,.1f kg%n", c.dacCo2Kg());

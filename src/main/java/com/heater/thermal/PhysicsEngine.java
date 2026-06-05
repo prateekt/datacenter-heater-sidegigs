@@ -2,6 +2,7 @@ package com.heater.thermal;
 
 import com.heater.carbon.AlgaeGrowthModel;
 import com.heater.carbon.CarbonCaptureModel;
+import com.heater.carbon.ConvectionCaptureModel;
 import com.heater.model.ActuatorState;
 import com.heater.model.SystemState;
 
@@ -46,15 +47,30 @@ public final class PhysicsEngine {
         AlgaeGrowthModel.updateThermal(state.algae, state.ambientTemp, actuators, cp, dt);
 
         double dacRateBefore = state.carbonCapture.currentCaptureRateKgS;
-        CarbonCaptureModel.CaptureResult capture = CarbonCaptureModel.integrate(
-                state.carbonCapture,
-                state.buffer.temperature,
-                mdotSec,
-                actuators.ccsValveOpen,
-                cp,
-                dt
+        CarbonCaptureModel.CaptureResult capture;
+        ConvectionCaptureModel.IntegrationResult convection = ConvectionCaptureModel.integrate(
+                state, cfg.convection, qReject, actuators, cp, dt
         );
-        CarbonCaptureModel.accumulateElectric(state, capture.electricW(), dt);
+
+        if (cfg.convection.convectionHybrid()) {
+            capture = new CarbonCaptureModel.CaptureResult(
+                    convection.qRegenW(), convection.qRegenW(), convection.regenElectricW()
+            );
+            state.convectionCo2CapturedKg = state.passiveConvection.co2CapturedKg;
+            if (state.passiveConvection.phase == com.heater.carbon.ConvectionCaptureCycle.Phase.ADSORB) {
+                state.carbonCapture.currentCaptureRateKgS = convection.captureRateKgS();
+            }
+        } else {
+            capture = CarbonCaptureModel.integrate(
+                    state.carbonCapture,
+                    state.buffer.temperature,
+                    mdotSec,
+                    actuators.ccsValveOpen,
+                    cp,
+                    dt
+            );
+            CarbonCaptureModel.accumulateElectric(state, capture.electricW(), dt);
+        }
 
         AlgaeGrowthModel.integrateGrowth(
                 state.algae,
@@ -84,7 +100,11 @@ public final class PhysicsEngine {
         if (state.primary.tOut > cfg.primaryTMax) {
             state.primaryUnsafeTimeS += dt;
         }
+        boolean convectionActive = cfg.convection.convectionHybrid()
+                && state.passiveConvection.enabled
+                && state.passiveConvection.currentCaptureRateKgS > 0;
         if ((state.carbonCapture.connected && state.carbonCapture.currentCaptureRateKgS > 0)
+                || convectionActive
                 || (state.algae.connected && state.algae.currentGrowthRateKgS > 0)) {
             state.ccsActiveSteps++;
         }

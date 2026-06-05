@@ -1,0 +1,32 @@
+one_liner: "Warm exhaust rises like a chimney and drags air through CO₂-catching walls — so we need fewer electric fans."
+disclaimer: "Speculative — physics is plausible, real plants are not built yet. Computer experiment only."
+
+concepts:
+  waste_heat: "Computers get hot like a game console — that warmth is waste heat."
+  convection: "Hot air rises like steam from soup — it pulls more air along."
+  sorbent: "A sponge in the air that grabs CO₂ molecules."
+  regeneration: "Heating the sponge to squeeze the CO₂ out, like wringing a towel."
+  fan_savings: "The chimney does part of the leaf-blower's job."
+
+kid_questions:
+  - q: "Is the data center a heater?"
+    a: "Yes. Almost all the electricity becomes heat."
+  - q: "Why a tall tower?"
+    a: "Taller warm column = stronger upward pull."
+  - q: "Do we still need fans?"
+    a: "Usually yes, but smaller or weaker ones."
+  - q: "Do we still need hot water for the sponge?"
+    a: "Yes — catching is passive; squeezing still needs heat."
+  - q: "Did we build this for real?"
+    a: "No. This is a computer experiment only."
+
+steps:
+  - "GPUs make heat → some goes into a tall warm chimney"
+  - "Rising warm air sucks outdoor air through giant capture walls"
+  - "Sponges fill up → heat pump squeezes CO₂ out (same as our liquid DAC model)"
+  - "Count CO₂ caught, fans saved, electricity still needed"
+
+honest_limits:
+  - "Nobody runs this at campus scale yet"
+  - "Our math is a cartoon, not a blueprint"
+  - "Liquid-cooled halls may need extra steps to warm the air chimney"

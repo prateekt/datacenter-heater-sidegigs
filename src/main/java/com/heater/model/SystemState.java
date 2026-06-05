@@ -11,6 +11,7 @@ public final class SystemState {
     public final HouseLoad house = new HouseLoad();
     public final CarbonCaptureLoad carbonCapture = new CarbonCaptureLoad();
     public final AlgaeLoad algae = new AlgaeLoad();
+    public final PassiveConvectionLoad passiveConvection = new PassiveConvectionLoad();
     public double energyRecoveredJ;
     public double energyPoolJ;
     public double energyAquacultureJ;
@@ -19,6 +20,8 @@ public final class SystemState {
     public double energyDacJ;
     public double energyRejectedJ;
     public double heatPumpElectricJ;
+    public double fanElectricJ;
+    public double convectionCo2CapturedKg;
     public double primaryUnsafeTimeS;
     public int ccsActiveSteps;
     public int totalSteps;

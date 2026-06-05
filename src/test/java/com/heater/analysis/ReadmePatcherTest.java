@@ -29,4 +29,22 @@ class ReadmePatcherTest {
         assertFalse(updated.contains("old content"));
         assertTrue(updated.contains("<!-- SCALABILITY:END -->"));
     }
+
+    @Test
+    void patchesConvectionBetweenMarkers(@TempDir Path dir) throws Exception {
+        Path readme = dir.resolve("README.md");
+        Files.writeString(readme, """
+                # Title
+
+                <!-- CONVECTION:BEGIN — auto-generated -->
+                old convection
+                <!-- CONVECTION:END -->
+                """);
+
+        ReadmePatcher.patchConvection(readme, "## Chimney DAC\n\nPlain English results.");
+        String updated = Files.readString(readme);
+        assertTrue(updated.contains("Plain English results."));
+        assertFalse(updated.contains("old convection"));
+        assertTrue(updated.contains("<!-- CONVECTION:END -->"));
+    }
 }

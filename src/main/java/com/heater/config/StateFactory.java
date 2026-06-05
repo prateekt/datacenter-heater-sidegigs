@@ -1,5 +1,6 @@
 package com.heater.config;
 
+import com.heater.carbon.ConvectionCaptureConfig;
 import com.heater.model.SystemState;
 
 import java.util.Map;
@@ -70,6 +71,16 @@ public final class StateFactory {
         s.algae.lossUa = ConfigLoader.d(algae, "loss_ua", 600.0);
         s.algae.spargeEfficiency = ConfigLoader.d(algae, "sparge_efficiency", 0.3);
         s.algae.temperature = ConfigLoader.d(algae, "initial_temp", 20.0);
+
+        ConvectionCaptureConfig convection = ConvectionCaptureConfig.fromYaml(config);
+        s.passiveConvection.enabled = convection.convectionHybrid();
+        if (convection.convectionHybrid()) {
+            s.carbonCapture.regenerationTemp = convection.regenerationTemp;
+            s.carbonCapture.minSourceTemp = convection.minSourceTemp;
+            s.carbonCapture.heatPumpCop = convection.heatPumpCop;
+            s.carbonCapture.specificHeatDutyJPerKg = convection.specificHeatDutyJPerKg;
+            s.carbonCapture.hpCapacityW = convection.hpCapacityW;
+        }
 
         return s;
     }
