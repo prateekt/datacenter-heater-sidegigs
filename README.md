@@ -28,7 +28,7 @@
 
 ## Start here
 
-> **In one sentence:** Data centers are giant heaters. **Job 1** is cooling the GPUs; the **side gig** is routing that exhaust to carbon capture, algae, shelter showers, and more — **before** it's thrown away.
+> **In one sentence:** Data centers are giant heaters. **Job 1** is cooling the GPUs; the **side gig** is routing that exhaust to carbon capture, algae, shelter showers, and more — **before** it's thrown away. **Long-term north star:** drive **uncompensated** campus externalities toward **zero** by colocating recovery with compute ([details](#north-star-zero-negative-externality)).
 
 Companies like **NVIDIA** are building huge **data centers** full of powerful **GPUs**. Almost all the electricity they use becomes **waste heat** — the data center's unwanted heater output. Today, **job 1** sends that heat outside and forgets it.
 
@@ -55,6 +55,25 @@ Read [The big idea](#the-big-idea), then [Side gig results](#what-we-found-nvidi
 | **Grid assumption** | Doesn't matter — heat exists either way | Same — we lead with **thermodynamics**, not grid mix |
 
 The name **Side Gig** is deliberate: AI training still needs cooling. We're asking what else that unavoidable exhaust could do on the way out.
+
+### North star: toward zero negative externality
+
+<a id="north-star-zero-negative-externality"></a>
+
+**Side gig** is the program. **Zero negative externality** is the long-term goal.
+
+In plain language: a hyperscale campus should not leave neighbors and the planet holding the bill for compute — **uncompensated** costs (heat dumped, noise at the fence, operational emissions, and everything else we haven't modeled yet) driven as close to zero as physics and policy allow, by **colocating recovery with the hall** instead of treating exhaust as waste.
+
+| Externality | Job 1 today | Side-gig direction (this repo) |
+|-------------|-------------|--------------------------------|
+| **Waste heat** | Rejected to ambient | Route to DAC, algae, showers, plastic (**~71 GWh/yr** at reference scale) |
+| **Operational CO₂** | Net emitter (grid scenario) | Partial clawback via colocated capture (**~25%** recovery — not neutrality) |
+| **Fence-line noise** | 24/7 fan hum | *(Speculative)* MSE panels + water; fan-orchestra valorization |
+| **Water, land, construction** | Outside our model | Acknowledged gap — north star ≠ certified today |
+
+We are **not** claiming zero negative externality now. We **are** naming the design intent: **internalize what you can** — heat first, sound second, carbon via colocated capture — before the campus is "done." Every module in this repo is one experiment on that path.
+
+> **How to read this repo:** **Job 1 vs. side gig** = today's framing and results. **Zero negative externality** = where a fully integrated campus *could* go if those side gigs scale and social license holds.
 
 ### The problem (explained simply)
 
@@ -1352,6 +1371,8 @@ datacenter-heater-sidegig/
 
 | Term | Simple definition |
 |------|-------------------|
+| **Side gig** | Job 2 for unavoidable GPU exhaust — route heat (and speculatively sound) to useful loads before rejection |
+| **Zero negative externality** | **North-star design intent:** no uncompensated spillover on neighbors or the planet; side gigs are how you internalize heat, noise, and carbon — not a claim this repo achieves zero today |
 | **GPU** | Graphics Processing Unit — a chip that does parallel math; used heavily for AI |
 | **Data center** | A building full of computers |
 | **Waste heat** | Unwanted thermal energy left over after electricity does work |
