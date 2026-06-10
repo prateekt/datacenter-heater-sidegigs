@@ -29,6 +29,8 @@ public final class MechanicalEqualizerConfig {
     public double wasteHeatToAirFraction = 0.35;
     public double chimneyHeightM = 120;
 
+    public FanOrchestraConfig fanOrchestra = new FanOrchestraConfig();
+
     public static MechanicalEqualizerConfig fromMap(java.util.Map<String, Object> root) {
         java.util.Map<String, Object> m = com.heater.config.ConfigLoader.map(root, "mechanical_equalizer");
         MechanicalEqualizerConfig c = new MechanicalEqualizerConfig();
@@ -61,6 +63,7 @@ public final class MechanicalEqualizerConfig {
         c.useChimneyDraft = bool(thermal, "use_chimney_draft", false);
         c.wasteHeatToAirFraction = com.heater.config.ConfigLoader.d(thermal, "waste_heat_to_air_fraction", c.wasteHeatToAirFraction);
         c.chimneyHeightM = com.heater.config.ConfigLoader.d(thermal, "chimney_height_m", c.chimneyHeightM);
+        c.fanOrchestra = FanOrchestraConfig.fromMap(m);
         return c;
     }
 

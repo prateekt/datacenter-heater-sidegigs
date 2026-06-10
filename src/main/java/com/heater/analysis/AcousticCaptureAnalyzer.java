@@ -61,8 +61,11 @@ public final class AcousticCaptureAnalyzer {
 
         Random rng = new Random(42);
         MechanicalDiffusionConfig diffCfg = refDiff;
-        double[] fanWave = FanNoiseSpectrum.synthesizeWaveform(spectrumCfg, rng);
-        var mdmg = MechanicalDiffusionPhysics.denoise(diffCfg, fanWave, rng);
+        double[] orchestraWave = MechanicalEqualizerPhysics.synthesizeFanOrchestraWaveform(
+                spectrumCfg, mseDecoupled, decoupledEq, rng);
+        var mdmg = MechanicalDiffusionPhysics.denoise(diffCfg, orchestraWave, rng);
+        double sustainIndex = BowedStringSynthesizer.sustainIndex(orchestraWave, spectrumCfg.sampleRateHz);
+        var orch = mseDecoupled.fanOrchestra();
 
         summary.setReferenceRuns(new AcousticResultsSummary.AcousticReferenceRuns(
                 baselineDba,
@@ -70,7 +73,11 @@ public final class AcousticCaptureAnalyzer {
                 mseCoupled.metrics().fenceLineDba(),
                 mdmg.spectralDistanceToTemplate(),
                 mdmg.harmonicity(),
-                mdmg.reverseSteps()
+                mdmg.reverseSteps(),
+                orch.activeInstrumentCount(),
+                orch.musicalContentDb(),
+                sustainIndex,
+                orch.tremoloDepthDb()
         ));
 
         AcousticSweepPoint ref = toMsePoint("reference", "Reference MSE (decoupled)", decoupledEq, mseDecoupled, baselineDba, 0);
@@ -99,7 +106,9 @@ public final class AcousticCaptureAnalyzer {
         for (int steps : intList(sweepConfig, "diffusion_steps")) {
             MechanicalDiffusionConfig dc = copyDiff(refDiff);
             dc.reverseSteps = steps;
-            var dr = MechanicalDiffusionPhysics.denoise(dc, fanWave, rng);
+            double[] orchInput = MechanicalEqualizerPhysics.synthesizeFanOrchestraWaveform(
+                    spectrumCfg, mseDecoupled, decoupledEq, rng);
+            var dr = MechanicalDiffusionPhysics.denoise(dc, orchInput, rng);
             summary.addPoint(new AcousticSweepPoint(
                     "diffusion_steps", steps + " reverse steps",
                     refEq.linerDepthMm, refEq.waterFlowLS, steps, "n/a",
@@ -119,6 +128,31 @@ public final class AcousticCaptureAnalyzer {
                     : null;
             var r = MechanicalEqualizerPhysics.solve(spectrumCfg, eq, d);
             summary.addPoint(toMsePoint("coupling_mode", mode, eq, r, baselineDba, 0));
+        }
+
+        for (double fraction : doubleList(sweepConfig, "instrumented_fractions")) {
+            MechanicalEqualizerConfig eq = copyEq(refEq);
+            eq.fanOrchestra.instrumentedFraction = fraction;
+            eq.thermalCouplingEnabled = false;
+            var r = MechanicalEqualizerPhysics.solve(spectrumCfg, eq, null);
+            summary.addPoint(toMsePoint("instrumented_fraction", fraction * 100 + "% fans instrumented", eq, r, baselineDba, 0));
+        }
+
+        for (int racks : intList(sweepConfig, "rack_counts")) {
+            AcousticSpectrumConfig spec = copySpectrum(spectrumCfg, racks);
+            double rackBaseline = FanNoiseSpectrum.compute(spec).overallDba();
+            MechanicalEqualizerConfig eq = copyEq(refEq);
+            eq.thermalCouplingEnabled = false;
+            var r = MechanicalEqualizerPhysics.solve(spec, eq, null);
+            summary.addPoint(toMsePoint("rack_count", racks + " racks", eq, r, rackBaseline, 0));
+        }
+
+        for (String cover : stringList(sweepConfig, "bow_covers")) {
+            MechanicalEqualizerConfig eq = copyEq(refEq);
+            eq.fanOrchestra.bowCoverCycle = cover;
+            eq.thermalCouplingEnabled = false;
+            var r = MechanicalEqualizerPhysics.solve(spectrumCfg, eq, null);
+            summary.addPoint(toMsePoint("bow_cover", cover + " cover", eq, r, baselineDba, 0));
         }
 
         exportAudio(summary, spectrumCfg, decoupledEq, coupledEq, convCfg, qWaste, ambientTempC, refDiff, rng);
@@ -146,18 +180,33 @@ public final class AcousticCaptureAnalyzer {
         SpectrogramGenerator.write(figuresDir.resolve("acoustic_spectrogram_baseline.png"), baseline, spectrumCfg.sampleRateHz, "baseline");
 
         var mseDec = MechanicalEqualizerPhysics.solve(spectrumCfg, decoupledEq, null);
-        double[] mseWave = MechanicalEqualizerPhysics.synthesizePerimeterWaveform(spectrumCfg, mseDec, rng);
+        double[] mseWave = MechanicalEqualizerPhysics.synthesizePerimeterWaveform(
+                spectrumCfg, mseDec, decoupledEq, rng);
         WavExporter.writeMono(audioDir.resolve("mse_perimeter_decoupled.wav"), mseWave, spectrumCfg.sampleRateHz);
         summary.addAudio("docs/audio/mse_perimeter_decoupled.wav");
         SpectrogramGenerator.write(figuresDir.resolve("acoustic_spectrogram_mse.png"), mseWave, spectrumCfg.sampleRateHz, "mse");
 
+        double[] orchestraWave = MechanicalEqualizerPhysics.synthesizeFanOrchestraWaveform(
+                spectrumCfg, mseDec, decoupledEq, rng);
+        WavExporter.writeMono(audioDir.resolve("fan_orchestra_15k.wav"), orchestraWave, spectrumCfg.sampleRateHz);
+        summary.addAudio("docs/audio/fan_orchestra_15k.wav");
+
+        double[] fanOnly = FanNoiseSpectrum.synthesizeWaveform(spectrumCfg, rng);
+        double[] compare = new double[fanOnly.length];
+        for (int i = 0; i < fanOnly.length; i++) {
+            compare[i] = orchestraWave[Math.min(i, orchestraWave.length - 1)] - 0.35 * fanOnly[i];
+        }
+        WavExporter.writeMono(audioDir.resolve("fan_orchestra_vs_raw_fan.wav"), compare, spectrumCfg.sampleRateHz);
+        summary.addAudio("docs/audio/fan_orchestra_vs_raw_fan.wav");
+
         var draft = MechanicalEqualizerPhysics.resolveDraft(coupledEq, convCfg, qWaste, ambientTempC);
         var mseCou = MechanicalEqualizerPhysics.solve(spectrumCfg, coupledEq, draft);
-        double[] mseCouWave = MechanicalEqualizerPhysics.synthesizePerimeterWaveform(spectrumCfg, mseCou, rng);
+        double[] mseCouWave = MechanicalEqualizerPhysics.synthesizePerimeterWaveform(
+                spectrumCfg, mseCou, coupledEq, rng);
         WavExporter.writeMono(audioDir.resolve("mse_perimeter_coupled.wav"), mseCouWave, spectrumCfg.sampleRateHz);
         summary.addAudio("docs/audio/mse_perimeter_coupled.wav");
 
-        var mdmg = MechanicalDiffusionPhysics.denoise(diffCfg, baseline, rng);
+        var mdmg = MechanicalDiffusionPhysics.denoise(diffCfg, orchestraWave, rng);
         WavExporter.writeMono(audioDir.resolve("mdmg_output.wav"), mdmg.outputWaveform(), spectrumCfg.sampleRateHz);
         summary.addAudio("docs/audio/mdmg_output.wav");
         SpectrogramGenerator.write(figuresDir.resolve("acoustic_spectrogram_mdmg.png"), mdmg.outputWaveform(), spectrumCfg.sampleRateHz, "mdmg");
@@ -206,7 +255,23 @@ public final class AcousticCaptureAnalyzer {
         m.put("thermal_coupling", Map.of(
                 "enabled", c.thermalCouplingEnabled, "use_chimney_draft", c.useChimneyDraft,
                 "waste_heat_to_air_fraction", c.wasteHeatToAirFraction, "chimney_height_m", c.chimneyHeightM));
+        m.put("fan_orchestra", c.fanOrchestra.toMap());
         return m;
+    }
+
+    private static AcousticSpectrumConfig copySpectrum(AcousticSpectrumConfig src, int rackCount) {
+        AcousticSpectrumConfig c = new AcousticSpectrumConfig();
+        c.fanRpm = src.fanRpm;
+        c.bladesPerFan = src.bladesPerFan;
+        c.fansPerRack = src.fansPerRack;
+        c.rackCount = rackCount;
+        c.distanceToFenceM = src.distanceToFenceM;
+        c.baselineSplDbaAtFence = src.baselineSplDbaAtFence;
+        c.tonalHarmonics = src.tonalHarmonics;
+        c.broadbandTurbulenceFraction = src.broadbandTurbulenceFraction;
+        c.sampleRateHz = src.sampleRateHz;
+        c.clipDurationS = src.clipDurationS;
+        return c;
     }
 
     private static MechanicalDiffusionConfig copyDiff(MechanicalDiffusionConfig src) {

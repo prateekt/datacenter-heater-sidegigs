@@ -51,6 +51,19 @@ where:
 - **McMahon / Stein (2024)** — Physical neural networks; speaker + plate classification.
 - **Mechanical NN (Nature Comm. 2024)** — In-situ backprop on 3D-printed spring networks.
 
+## GPU fan orchestra (physical prior)
+
+Inspired by the [Pickaso Rotary Bow](https://www.youtube.com/watch?v=N7B5sxk9OlA): each **GPU cooling fan** drives one **rotary-bow string cell** at Colossus-class scale (**15,000 fans** = 15,000 instruments in [`config/acoustic_spectrum.yaml`](../config/acoustic_spectrum.yaml)).
+
+| Pickaso concept | Fan-orchestra mapping |
+|-----------------|----------------------|
+| Motorized elastic wheel | Fan shaft couples to bow wheel |
+| Tremobow / Vase / Curved covers | Per-voice timbre preset (`bow_cover_cycle`) |
+| Endless sustain | Continuous bowing while fans run |
+| BPF blade clock | ~490 Hz hall-wide tremolo |
+
+Implementation: `FanDrivenInstrumentField` (aggregate 1/3-octave SPL) + `BowedStringSynthesizer` (statistical multi-voice waveform). Java-LDM trains **fan noise → bowed-string field**; MDMG refines the **orchestra waveform**, not raw hum.
+
 ## This repo's Java-first demo pipeline
 
 We do **not** port billion-parameter SOTA weights. Instead:

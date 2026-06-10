@@ -62,19 +62,22 @@ public final class MdmgBenchmarkMain {
 
         Random rng = new Random(42);
         double[] fan = FanNoiseSpectrum.synthesizeWaveform(specCfg, rng);
+        FanOrchestraConfig orchestraCfg = FanOrchestraConfig.fromMap(
+                ConfigLoader.load("config/mechanical_equalizer.yaml"));
+        double[] orchestra = BowedStringSynthesizer.synthesizeField(specCfg, orchestraCfg, rng);
 
-        var v1 = MechanicalDiffusionPhysics.denoise(mdmgV1Cfg, fan, rng);
+        var v1 = MechanicalDiffusionPhysics.denoise(mdmgV1Cfg, orchestra, rng);
         WavExporter.writeMono(outputDir.resolve("mdmg_v1_baseline.wav"), v1.outputWaveform(), specCfg.sampleRateHz);
 
-        StftEngine.StftResult fanStft = StftEngine.forward(fan, specCfg.sampleRateHz);
+        StftEngine.StftResult orchStft = StftEngine.forward(orchestra, specCfg.sampleRateHz);
         MdmgLandscapeConfig landscapeDefault = MdmgLandscapeConfig.fromMap(ConfigLoader.load(landscapePath));
         MdmgLandscapeConfig landscapeExpanded = MdmgLandscapeTrainer.loadExpandedLandscape(
-                Path.of(landscapePath), StftEngine.flattenLogMag(fanStft).length);
+                Path.of(landscapePath), StftEngine.flattenLogMag(orchStft).length);
 
-        var v2 = MechanicalDiffusionPhysicsV2.denoise(fan, landscapeDefault, rng);
+        var v2 = MechanicalDiffusionPhysicsV2.denoise(orchestra, landscapeDefault, rng);
         WavExporter.writeMono(outputDir.resolve("mdmg_v2.wav"), v2.outputWaveform(), specCfg.sampleRateHz);
 
-        var v2dist = MechanicalDiffusionPhysicsV2.denoise(fan, landscapeExpanded, new Random(42));
+        var v2dist = MechanicalDiffusionPhysicsV2.denoise(orchestra, landscapeExpanded, new Random(42));
         WavExporter.writeMono(outputDir.resolve("mdmg_v2_distilled.wav"), v2dist.outputWaveform(), specCfg.sampleRateHz);
 
         var ldm = LatentDiffusionInference.generate(fan, prompt, ldmCfg, net);

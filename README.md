@@ -1,6 +1,6 @@
 <p align="center">
   <strong>Data Center Heater Side Gig</strong><br>
-  <em>Job 1: cool the GPUs. Side gig: put that exhaust to work — DAC, algae, shelter showers, plastic recycling, acoustic soundscapes.</em>
+  <em>Job 1: cool the GPUs. Side gig: put that exhaust to work — DAC, algae, shelter showers, plastic recycling, and a 15,000-instrument GPU fan orchestra inspired by the Pickaso Rotary Bow.</em>
 </p>
 
 <p align="center">
@@ -665,15 +665,15 @@ Regenerate convection charts and kindergarten-level README section:
 ./gradlew generateConvectionFigures
 ```
 
-### Speculative acoustic side gig (MSE + MDMG)
+### Speculative acoustic side gig (MSE + MDMG + GPU fan orchestra)
 
-Mechanical soundscape equalizer and mechanical diffusion music generator — experimental noise valorization:
+Mechanical soundscape equalizer and mechanical diffusion music generator — experimental noise valorization built around the **[Pickaso Rotary Bow](https://www.pickasobow.com/products/pickaso-rotary-bow)** concept at data-center scale: **one motorized bow-string cell per cooling fan** (15,000 at Colossus-class scale). See [acoustic section](#acoustic-speculative) for product images, scale diagrams, and analytics.
 
 ```bash
 ./gradlew generateAcousticFigures
 ```
 
-Writes charts to `docs/figures/`, WAV clips to `docs/audio/`, and patches the [acoustic section](#acoustic-speculative).
+Writes Pickaso concept diagrams, fan-orchestra analytics charts, WAV clips to `docs/audio/`, and patches the [acoustic section](#acoustic-speculative).
 
 ### MDMG SOTA benchmark (Java-first)
 
@@ -932,25 +932,79 @@ Treat this module as **structured speculation**: physics plausible, economics un
 
 *Auto-generated **speculative** results — mechanical soundscape equalizer (MSE) and mechanical diffusion music generator (MDMG). Not mixed with main thermal CO₂ results.*
 
-> **In one sentence:** Turn the data center's loud fan hum into a softer nature soundscape — or even music — using pipes, water, and tuned metal, not speakers.
+> **In one sentence:** Each GPU cooling fan spins a tiny rotary bow on a string — 15,000 of them turn the data center into a mechanical orchestra.
+
+### What is the Pickaso Rotary Bow?
+
+The acoustic side gig starts from a real product: the **[Pickaso Rotary Bow](https://www.pickasobow.com/products/pickaso-rotary-bow)** — a patent-pending motorized elastic wheel that bows guitar strings with **endless sustain**. Swappable covers change timbre: **Tremobow** (butterfly cover), **Vase**, and **Curved** bow profiles. Watch the [official demo](https://www.youtube.com/watch?v=N7B5sxk9OlA).
+
+| Product overview | Tremobow effect (demo frame) |
+|------------------|------------------------------|
+| ![Pickaso Rotary Bow](docs/images/pickaso_rotary_bow.jpg) | ![Pickaso Tremobow](docs/images/pickaso_tremobow.jpg) |
+
+The Pickaso Rotary Bow is a motorized elastic wheel that bows guitar strings continuously — no lifting the bow. Interchangeable covers (Butterfly/Tremobow, Vase, Curved) change timbre. We map that cell onto every GPU cooling fan: the fan shaft drives the bow wheel, and blade-passing frequency (~490 Hz) amplitude-modulates bow pressure — a hall-wide tremolo clock.
+
+| Pickaso Rotary Bow | Our fan-orchestra cell (per cooling fan) |
+|--------------------|----------------------------------------|
+| Motorized elastic bow wheel | Fan shaft couples to bow wheel (gear ratio configurable) |
+| Tremobow / Butterfly cover — hybrid tremolo + bow | BPF AM on bow pressure (~490 Hz at 4200 RPM × 7 blades) |
+| Vase cover — soft classical bow timbre | Timbre preset on every third logical voice (aggregate model) |
+| Curved cover — brighter bow contact | Alternates with tremobow/vase for aisle-to-aisle texture |
+| Endless sustain while motor runs | Continuous bowing while fans run — drone + evolving partials |
+| One instrument (guitar) | One bowed-string cell per cooling fan — 15,000 at Colossus scale |
+
+### GPU fan orchestra at Colossus scale
+
+The reference hall in [`config/acoustic_spectrum.yaml`](config/acoustic_spectrum.yaml) anchors scale:
+
+| Quantity | Value | Role |
+|----------|-------|------|
+| Racks | **2,500** | Hyperscale AI hall |
+| Fans per rack | **6** | CRAC / rear-door / tray cooling |
+| **Total instruments** | **15,000** | One rotary-bow cell per fan |
+| Reference GPUs | **~25,000 B200** | Thermal load (heat path ≠ 1:1 with fan count) |
+| Blade-passing frequency | **~490 Hz** | 4200 RPM × 7 blades — hall tremolo clock |
+| Fence distance | **150 m** | Where aggregate music SPL is reported |
+
+```mermaid
+flowchart LR
+  subgraph cell [One fan cell x15000]
+    Fan[Fan shaft 4200 RPM]
+    Bow[Rotary bow wheel]
+    Cover[Tremobow / Vase / Curved]
+    String[Bowed string]
+    Fan --> Bow --> Cover --> String
+  end
+  String --> Aggregate[128-voice statistical mix]
+  Aggregate --> Fence[Fence line 150m]
+```
+
+![fan orchestra cell](docs/figures/fan_orchestra_cell.png)
+
+![fan orchestra at scale](docs/figures/fan_orchestra_at_scale.png)
+
+At full deployment (**100% instrumented**), this run reports **15,000** active bow voices, **69.44 dB** musical partial energy, and **10.00 dB** BPF tremolo depth.
 
 ### Picture this
 
 | Complicated word | Think of it like… |
 |------------------|-------------------|
 | Metamaterial liner | Thin honeycomb panels that eat the harshest fan tones like earplugs with holes for air. |
-| Water soundscape | Warm exhaust can push water over rocks — trickling sounds that feel like a stream. |
+| Fan orchestra | Each cooling fan drives a rotary bow on a string cell — blade-passing frequency becomes hall-wide tremolo. |
 | Organ pipes | Chimney air can blow across tuned pipes — turning part of the hum into notes. |
+| Water soundscape | Warm exhaust can push water over rocks — trickling sounds that feel like a stream. |
 | Fan noise | Thousands of fans whir like leaf blowers in a stadium — mostly steady tones plus whoosh. |
-| Mechanical diffusion | Springs and masses that slowly shake noise into smoother, music-like patterns — like clay on a wheel. |
+| Pickaso Rotary Bow | A motorized wheel that bows strings forever — three swappable covers for tremolo or smooth bow tones. |
+| Mechanical diffusion | Springs and masses that refine the fan-orchestra rumble toward smoother music — like clay on a wheel. |
 
 ### What the simulation tried (still experimental in real life)
 
-1. Measure fan noise as tones (blade passing frequency) plus broadband whoosh
-2. Pass exhaust through metamaterial liners that cancel harsh tones (with a fan-power penalty)
-3. Add water features, organ pipes, and chimes driven by exhaust or chimney draft
-4. Optionally run fan noise through a coupled-oscillator 'mechanical diffusion' stack
-5. Report fence-line loudness, soundscape quality, and example audio clips
+1. Count cooling fans across the hall (racks × fans per rack = 15,000 instruments)
+2. Model each fan driving a rotary bow string cell with BPF tremolo and Pickaso-style wheel covers
+3. Aggregate thousands of detuned bow voices into fence-line SPL and synthetic audio
+4. Pass fan-orchestra waveform through metamaterial liners (with fan-power penalty)
+5. Optionally refine with mechanical diffusion or Java latent diffusion toward bowed-string targets
+6. Report musical content, sustain, tremolo depth, and example audio clips
 
 ### Results in plain English
 
@@ -958,19 +1012,60 @@ Treat this module as **structured speculation**: physics plausible, economics un
 |--------------------------|---------------|
 | Why is the data center so loud? | Cooling fans run 24/7 — blade tones plus air whoosh add up across thousands of racks. |
 | Can we just turn it off? | No — GPUs overheat without fans. We ask what else the sound could become. |
+| What is the Pickaso Rotary Bow? | A tiny motorized bow wheel for guitar — we ask what happens if every cooling fan drove one. |
+| What is a fan orchestra? | One tiny bowed string per fan — 15,000 fans means 15,000 sustained voices at Colossus scale. |
 | What is a mechanical equalizer? | Tuned holes and panels that subtract bad tones and add pleasant ones — no computer needed. |
-| What is mechanical AI diffusion? | A wild idea — coupled springs that denoise fan rumble toward music, like software diffusion but in metal. |
+| What is mechanical AI diffusion? | Coupled springs that refine fan-orchestra rumble toward music, like software diffusion but in metal. |
 | Did we build this for real? | No. This is a computer experiment only. |
+| How many fan-driven instruments? | **15,000** rotary-bow cells (1 per cooling fan) |
+| Musical content (bow partials)? | About **69.44 dB** aggregate |
 | How loud at the fence before? | About **78.85 dBA** |
-| After mechanical equalizer (no chimney)? | About **80.62 dBA** |
-| With chimney-coupled water/pipes? | About **84.80 dBA** |
+| After mechanical equalizer (no chimney)? | About **80.70 dBA** |
+| With chimney-coupled water/pipes? | About **84.83 dBA** |
 | Does the liner cost fan electricity? | About **184.62 kW** added at reference depth |
+
+### Fan orchestra analytics (reference + sweeps)
+
+These metrics quantify how structured bow partials replace raw BPF hum as the music-generation **source** (Java-LDM and MDMG train on fan → bowed-string pairs, not generic sine pads).
+
+| Metric | Reference value | Meaning |
+|--------|-----------------|--------|
+| Active instruments | **15,000** | Fans with bow cells (2,500 × 6) |
+| Musical content | **69.44 dB** | Bow partial energy in 200 Hz–2 kHz bands |
+| Sustain index | **0.42** | Lag-autocorrelation of bowed waveform (0–1) |
+| Tremolo depth | **10.00 dB** | BPF amplitude modulation on bow pressure |
+| MDMG input | Fan-orchestra aggregate | Not raw single-fan noise |
+| MDMG harmonicity | **1.00** | After mechanical diffusion on orchestra clip |
+
+**Pilot vs. full hall instrumented**
+
+| Scenario | Fence SPL (dBA) | Tonal prominence (dB) | SQI |
+|----------|-----------------|----------------------|-----|
+| 10.0% fans instrumented | **80.65** | **0.47** | **1.00** |
+| 50.0% fans instrumented | **80.66** | **0.56** | **1.00** |
+| 100.0% fans instrumented | **80.70** | **0.69** | **1.00** |
+
+**Hall size scaling**
+
+| Scenario | Fence SPL (dBA) | Tonal prominence (dB) | SQI |
+|----------|-----------------|----------------------|-----|
+| 500 racks | **79.79** | **0.72** | **0.00** |
+| 2500 racks | **80.70** | **0.69** | **1.00** |
+| 5000 racks | **81.62** | **0.66** | **1.00** |
+
+**Pickaso cover preset comparison**
+
+| Scenario | Fence SPL (dBA) | Tonal prominence (dB) | SQI |
+|----------|-----------------|----------------------|-----|
+| tremobow cover | **80.73** | **0.77** | **1.00** |
+| vase cover | **80.68** | **0.61** | **1.00** |
+| curved cover | **80.70** | **0.68** | **1.00** |
 
 ### Then the numbers — Scheme 1 (MSE)
 
 | Metric | Baseline | MSE decoupled | MSE chimney-coupled |
 |--------|----------|---------------|---------------------|
-| Fence-line SPL | **78.85 dBA** | **80.62 dBA** | **84.80 dBA** |
+| Fence-line SPL | **78.85 dBA** | **80.70 dBA** | **84.83 dBA** |
 | Soundscape quality index | — | **1.00** | (see coupling sweep) |
 | Added fan power (liner) | — | **184.62 kW** | — |
 
@@ -979,8 +1074,23 @@ Treat this module as **structured speculation**: physics plausible, economics un
 | Metric | Value |
 |--------|-------|
 | Reverse denoising steps | **40** |
-| Spectral distance to template | **31.04** |
-| Harmonicity | **0.98** |
+| Input | **Fan-orchestra aggregate** (15k bow voices, statistical waveform) |
+| Spectral distance to template | **41.32** |
+| Harmonicity | **1.00** |
+| Sustain index (orchestra) | **0.42** |
+| Tremolo depth | **10.00 dB** |
+
+### Fan orchestra charts
+
+![acoustic orchestra instrumented fraction](docs/figures/acoustic_orchestra_instrumented_fraction.png)
+
+![acoustic orchestra rack count](docs/figures/acoustic_orchestra_rack_count.png)
+
+![acoustic orchestra bow covers](docs/figures/acoustic_orchestra_bow_covers.png)
+
+![acoustic orchestra bow covers spl](docs/figures/acoustic_orchestra_bow_covers_spl.png)
+
+### MSE and MDMG sweeps
 
 ![acoustic spl vs liner depth](docs/figures/acoustic_spl_vs_liner_depth.png)
 
@@ -995,9 +1105,11 @@ Treat this module as **structured speculation**: physics plausible, economics un
 | Clip | Description |
 |------|-------------|
 | [fan_noise_baseline.wav](docs/audio/fan_noise_baseline.wav) | Unmitigated fan noise at the fence line |
-| [mse_perimeter_decoupled.wav](docs/audio/mse_perimeter_decoupled.wav) | Scheme 1 — metamaterial + water/pipes (decoupled) |
+| [mse_perimeter_decoupled.wav](docs/audio/mse_perimeter_decoupled.wav) | Scheme 1 — orchestra + metamaterial + water/pipes (decoupled) |
+| [fan_orchestra_15k.wav](docs/audio/fan_orchestra_15k.wav) | 15,000 fan-driven rotary bow strings (aggregate) |
+| [fan_orchestra_vs_raw_fan.wav](docs/audio/fan_orchestra_vs_raw_fan.wav) | Fan orchestra minus attenuated raw fan bed |
 | [mse_perimeter_coupled.wav](docs/audio/mse_perimeter_coupled.wav) | Scheme 1 — with chimney-draft coupling |
-| [mdmg_output.wav](docs/audio/mdmg_output.wav) | Scheme 2 — mechanical diffusion output |
+| [mdmg_output.wav](docs/audio/mdmg_output.wav) | Scheme 2 — MDMG refines fan-orchestra input |
 
 ### Scheme 2 — software vs. mechanical diffusion
 
@@ -1027,7 +1139,10 @@ and mechanical diffusion music at hyperscale — that gap is why we label this e
 | [Galbrun, L. & Ali, T. (2013)](https://pure.hw.ac.uk/ws/files/7638422/Paper_LG_TTA_JASA_2013.pdf) | Streams/fountains improve **peacefulness** via informational masking, not pure dB cover | Water module adds mid-band energy; soundscape index weights nature-band content. |
 | [Aletta, F., et al. (2024)](https://www.sciencedirect.com/science/article/pii/S0003682X24000987) | Optimum zone when water within **~3 dB** of masker; effective to **~65 dBA** traffic | Sweep varies water flow to map masking-zone width at the fence line. |
 | [AIVC (1999)](https://www.aivc.org/sites/default/files/members_area/medias/pdf/CR/CR01_Aerodynamical_noise_of_fans.pdf) | Tonal BPF and harmonics plus broadband turbulence shelf in ducted fans | BPF = blades × RPM/60 underpins our tonal line spectrum. |
-| [Whitelam, S., et al. (2024)](https://res.cloudinary.com/apsphysics/image/upload/v1766014133/LF20470_uuxl1g.pdf) | Langevin dynamics on coupled oscillators denoise toward learned energy landscapes | MDMG module uses overdamped Langevin steps with a **fixed** music template landscape. |
+| [Huang, R., et al. (2023)](https://arxiv.org/abs/2302.03917) | Text→music from **Gaussian** noise via diffusion; not facility fan hum as x_T | Name is misleading for DC task — we start from **measured fan STFT**, not pure Gaussian. |
+| [Evans, Z., et al. (2024)](https://arxiv.org/abs/2407.14358) | Text + optional **init_audio** / init_noise_level for A2A variation | Closest SOTA pattern for noise→structured audio; Java-LDM is task-specific, not these weights. |
+| [Liu, H., et al. (2023)](https://arxiv.org/abs/2308.05734) | Latent diffusion in LOA space; strong reconstruction + controllable generation | Architecture reference — our Java-LDM uses tiny MLP score net on STFT latents. |
+| [Whitelam, S., et al. (2024)](https://res.cloudinary.com/apsphysics/image/upload/v1766014133/LF20470_uuxl1g.pdf) | Langevin dynamics on coupled oscillators denoise toward learned energy landscapes | MDMG v2 uses STFT Langevin with distilled K; v1 used fixed template + post-hoc harmonic blend. |
 | [Hughes, T.W., et al. (2019)](https://pmc.ncbi.nlm.nih.gov/articles/PMC6924985/) | Scattering media perform temporal processing on raw acoustic signals | Conceptual ancestor — we use reduced-order oscillators, not inverse-designed scatterers. |
 | [Stein, L. (McMahon group) (2024)](https://mcmahon.aep.cornell.edu/theses/2024_Stein.pdf) | Speaker-driven vibrating plate performs image classification as a PNN | Shows trainable physical layers — we do **not** train MDMG in this repo. |
 | [Mechanical NN authors (2024)](https://nature.com/articles/s41467-024-54849-z) | 3D-printed spring networks trained via mechanical adjoint methods | Future-work anchor for trainable MDMG hardware — not modeled here. |
@@ -1040,14 +1155,16 @@ and mechanical diffusion music at hyperscale — that gap is why we label this e
 | Has anyone built mechanical music from GPU fan noise? | Not in published literature. Physical generative computing exists in lab scale; DC music diffusion is our deliberate gap. |
 | Do metamaterial liners work on real racks? | Yes at rack scale (Bell Labs SeMSA). Perimeter soundscape valorization at AI-campus scale is not demonstrated. |
 | Why not just use speakers and AI software? | This side gig asks what **passive/mechanical** paths could do with exhaust already on site — complementary, not exclusive. |
+| DDPM vs Langevin — when is passive hardware enough? | Software DDPM needs a learned score at every step; Langevin MDM replaces that with -∇E_θ. If distillation error is low, springs may suffice; if not, software ceiling (Java-LDM) shows the task is learnable but needs richer hardware. |
+| Why is Java-LDM not AudioLDM 2? | Billions of params and GPU training vs our ~200k-param CPU task model. Literature FAD/CLAP numbers cite true SOTA; we compare tiers fairly on the same DC fan-noise task. |
 
 **Our reference run vs. literature anchors:**
 
 | Metric | This sim | Literature anchor |
 |--------|----------|-------------------|
-| Metamaterial attenuation | **-1.78 dBA** fence-line shift | **~2.5 dBA** rack liner (Bell Labs SeMSA) |
+| Metamaterial attenuation | **-1.85 dBA** fence-line shift | **~2.5 dBA** rack liner (Bell Labs SeMSA) |
 | Water masking | SQI **1.00** | Informational masking (Galbrun & Ali 2013) |
-| MDMG harmonicity | **0.98** | Physical generative computing — lab scale only |
+| MDMG harmonicity | **1.00** | Physical generative computing — lab scale only |
 
 ### Conclusion — synthesis and research positioning
 
@@ -1061,19 +1178,20 @@ Thermal side gigs route **heat** to DAC, algae, and community loads. Acoustic si
 
 ### Honest limits
 
-- Nobody runs campus-scale mechanical soundscape valorization yet
+- Nobody mounts Pickaso rotary bows on 15,000 CRAC fans yet
+- We aggregate voices statistically — not 15,000 independent time-domain simulations
 - Thin liners may not fix infrasound below 20 Hz
-- Metamaterials add airflow resistance — fans may need more electricity
-- Mechanical diffusion music uses a fixed template — training real hardware is unsolved
+- Metamaterials and bow friction add airflow resistance — fans may need more electricity
+- Mechanical diffusion refines a fan-orchestra prior — training campus-scale hardware is unsolved
 
-### Generated at: 2026-06-05T18:07:24.803819Z
+### Generated at: 2026-06-09T23:38:37.995425Z
 
 ### Sources
 
 - Physics: `src/main/java/com/heater/acoustic/`
 - Defaults: `config/acoustic_spectrum.yaml`, `config/mechanical_equalizer.yaml`, `config/mechanical_diffusion.yaml`
 - Literature: `config/acoustic_references.yaml`
-- Speculative — metamaterial liners are lab-demonstrated; campus-scale soundscape valorization is not built yet. Computer experiment only.
+- Speculative — Pickaso-style rotary bows on CRAC fans are not built at campus scale. Computer experiment only.
 <!-- ACOUSTIC:END -->
 
 ---
@@ -1091,16 +1209,16 @@ Thermal side gigs route **heat** to DAC, algae, and community loads. Acoustic si
 
 | Tier | Spectral dist. | Harmonicity | CLAP proxy | FAD proxy |
 |------|----------------|-------------|------------|----------|
-| **MDMG_v1** | 29.389 | 0.963 | 0.673 | 1.041 |
-| **MDMG_v2** | 3.878 | 0.005 | 0.585 | 3.020 |
-| **MDMG_v2_distilled** | 3.640 | 0.003 | 0.621 | 2.581 |
-| **Java_LDM** | 14.693 | 0.001 | 0.654 | 3.573 |
+| **MDMG_v1** | 38.377 | 1.000 | 0.617 | 0.643 |
+| **MDMG_v2** | 4.409 | 0.048 | 0.654 | 3.172 |
+| **MDMG_v2_distilled** | 4.642 | 0.020 | 0.607 | 2.882 |
+| **Java_LDM** | 14.957 | 0.001 | 0.654 | 3.582 |
 
 ### Distillation (Java-LDM → mechanical springs)
 
 | Metric | Value |
 |--------|-------|
-| Landscape distillation MSE | **0.020** |
+| Landscape distillation MSE | **0.022** |
 
 ### Audio outputs
 

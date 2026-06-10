@@ -1,34 +1,67 @@
-one_liner: "Turn the data center's loud fan hum into a softer nature soundscape — or even music — using pipes, water, and tuned metal, not speakers."
-disclaimer: "Speculative — metamaterial liners are lab-demonstrated; campus-scale soundscape valorization is not built yet. Computer experiment only."
+one_liner: "Each GPU cooling fan spins a tiny rotary bow on a string — 15,000 of them turn the data center into a mechanical orchestra."
+disclaimer: "Speculative — Pickaso-style rotary bows on CRAC fans are not built at campus scale. Computer experiment only."
+
+pickaso:
+  product_name: "Pickaso Rotary Bow"
+  video_url: "https://www.youtube.com/watch?v=N7B5sxk9OlA"
+  product_url: "https://www.pickasobow.com/products/pickaso-rotary-bow"
+  hero_image: "docs/images/pickaso_rotary_bow.jpg"
+  tremobow_image: "docs/images/pickaso_tremobow.jpg"
+  intro: >
+    The Pickaso Rotary Bow is a motorized elastic wheel that bows guitar strings continuously —
+    no lifting the bow. Interchangeable covers (Butterfly/Tremobow, Vase, Curved) change timbre.
+    We map that cell onto every GPU cooling fan: the fan shaft drives the bow wheel, and blade-passing
+    frequency (~490 Hz) amplitude-modulates bow pressure — a hall-wide tremolo clock.
+  mapping:
+    - pickaso: "Motorized elastic bow wheel"
+      fan_cell: "Fan shaft couples to bow wheel (gear ratio configurable)"
+    - pickaso: "Tremobow / Butterfly cover — hybrid tremolo + bow"
+      fan_cell: "BPF AM on bow pressure (~490 Hz at 4200 RPM × 7 blades)"
+    - pickaso: "Vase cover — soft classical bow timbre"
+      fan_cell: "Timbre preset on every third logical voice (aggregate model)"
+    - pickaso: "Curved cover — brighter bow contact"
+      fan_cell: "Alternates with tremobow/vase for aisle-to-aisle texture"
+    - pickaso: "Endless sustain while motor runs"
+      fan_cell: "Continuous bowing while fans run — drone + evolving partials"
+    - pickaso: "One instrument (guitar)"
+      fan_cell: "One bowed-string cell per cooling fan — 15,000 at Colossus scale"
 
 concepts:
   fan_noise: "Thousands of fans whir like leaf blowers in a stadium — mostly steady tones plus whoosh."
   metamaterial: "Thin honeycomb panels that eat the harshest fan tones like earplugs with holes for air."
   water_soundscape: "Warm exhaust can push water over rocks — trickling sounds that feel like a stream."
   organ_pipes: "Chimney air can blow across tuned pipes — turning part of the hum into notes."
-  mechanical_diffusion: "Springs and masses that slowly shake noise into smoother, music-like patterns — like clay on a wheel."
+  fan_orchestra: "Each cooling fan drives a rotary bow on a string cell — blade-passing frequency becomes hall-wide tremolo."
+  mechanical_diffusion: "Springs and masses that refine the fan-orchestra rumble toward smoother music — like clay on a wheel."
+  pickaso_rotary_bow: "A motorized wheel that bows strings forever — three swappable covers for tremolo or smooth bow tones."
 
 kid_questions:
   - q: "Why is the data center so loud?"
     a: "Cooling fans run 24/7 — blade tones plus air whoosh add up across thousands of racks."
   - q: "Can we just turn it off?"
     a: "No — GPUs overheat without fans. We ask what else the sound could become."
+  - q: "What is the Pickaso Rotary Bow?"
+    a: "A tiny motorized bow wheel for guitar — we ask what happens if every cooling fan drove one."
+  - q: "What is a fan orchestra?"
+    a: "One tiny bowed string per fan — 15,000 fans means 15,000 sustained voices at Colossus scale."
   - q: "What is a mechanical equalizer?"
     a: "Tuned holes and panels that subtract bad tones and add pleasant ones — no computer needed."
   - q: "What is mechanical AI diffusion?"
-    a: "A wild idea — coupled springs that denoise fan rumble toward music, like software diffusion but in metal."
+    a: "Coupled springs that refine fan-orchestra rumble toward music, like software diffusion but in metal."
   - q: "Did we build this for real?"
     a: "No. This is a computer experiment only."
 
 steps:
-  - "Measure fan noise as tones (blade passing frequency) plus broadband whoosh"
-  - "Pass exhaust through metamaterial liners that cancel harsh tones (with a fan-power penalty)"
-  - "Add water features, organ pipes, and chimes driven by exhaust or chimney draft"
-  - "Optionally run fan noise through a coupled-oscillator 'mechanical diffusion' stack"
-  - "Report fence-line loudness, soundscape quality, and example audio clips"
+  - "Count cooling fans across the hall (racks × fans per rack = 15,000 instruments)"
+  - "Model each fan driving a rotary bow string cell with BPF tremolo and Pickaso-style wheel covers"
+  - "Aggregate thousands of detuned bow voices into fence-line SPL and synthetic audio"
+  - "Pass fan-orchestra waveform through metamaterial liners (with fan-power penalty)"
+  - "Optionally refine with mechanical diffusion or Java latent diffusion toward bowed-string targets"
+  - "Report musical content, sustain, tremolo depth, and example audio clips"
 
 honest_limits:
-  - "Nobody runs campus-scale mechanical soundscape valorization yet"
+  - "Nobody mounts Pickaso rotary bows on 15,000 CRAC fans yet"
+  - "We aggregate voices statistically — not 15,000 independent time-domain simulations"
   - "Thin liners may not fix infrasound below 20 Hz"
-  - "Metamaterials add airflow resistance — fans may need more electricity"
-  - "Mechanical diffusion music uses a fixed template — training real hardware is unsolved"
+  - "Metamaterials and bow friction add airflow resistance — fans may need more electricity"
+  - "Mechanical diffusion refines a fan-orchestra prior — training campus-scale hardware is unsolved"

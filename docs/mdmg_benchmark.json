@@ -1,9 +1,9 @@
 {
-  "distillation_mse": 0.019899,
+  "distillation_mse": 0.021804,
   "tiers": [
-    {"tier":"MDMG_v1","spectral_distance":31.0387,"harmonicity":0.9825,"clap_proxy":0.5286,"fad_proxy":1.0826},
-    {"tier":"MDMG_v2","spectral_distance":3.9694,"harmonicity":0.0037,"clap_proxy":0.5961,"fad_proxy":2.9675},
-    {"tier":"MDMG_v2_distilled","spectral_distance":3.7100,"harmonicity":0.0021,"clap_proxy":0.5389,"fad_proxy":2.8410},
-    {"tier":"Java_LDM","spectral_distance":14.9544,"harmonicity":0.0000,"clap_proxy":0.6444,"fad_proxy":3.6158}
+    {"tier":"MDMG_v1","spectral_distance":41.2535,"harmonicity":0.9990,"clap_proxy":0.7910,"fad_proxy":0.6564},
+    {"tier":"MDMG_v2","spectral_distance":3.7170,"harmonicity":0.0000,"clap_proxy":0.5389,"fad_proxy":2.9241},
+    {"tier":"MDMG_v2_distilled","spectral_distance":4.0069,"harmonicity":0.0000,"clap_proxy":0.5961,"fad_proxy":3.0626},
+    {"tier":"Java_LDM","spectral_distance":15.2276,"harmonicity":0.0000,"clap_proxy":0.6444,"fad_proxy":3.6192}
   ]
 }

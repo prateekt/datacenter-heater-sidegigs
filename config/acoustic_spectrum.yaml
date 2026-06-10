@@ -1,4 +1,5 @@
 # Data-center fan noise source model (1/3-octave bands)
+# Colossus-class hall: 2500 racks × 6 fans/rack = 15,000 fan-orchestra instruments
 acoustic_spectrum:
   fan_rpm: 4200
   blades_per_fan: 7

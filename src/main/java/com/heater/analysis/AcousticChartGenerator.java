@@ -29,6 +29,9 @@ public final class AcousticChartGenerator {
         paths.add(writeSoundscapeVsWaterFlow(summary));
         paths.add(writeMdmgVsSteps(summary));
         paths.add(writeCouplingComparison(summary));
+        paths.add(writeOrchestraInstrumentedFraction(summary));
+        paths.add(writeOrchestraRackCount(summary));
+        paths.addAll(writeOrchestraBowCovers(summary));
         for (String p : paths) {
             summary.addChart(p);
         }
@@ -100,6 +103,95 @@ public final class AcousticChartGenerator {
         ChartStyle.applyCategory(chart, ChartStyle.TEAL);
         chart.addSeries("dBA", labels, dba);
         return saveCategory(chart, "acoustic_coupling_comparison.png");
+    }
+
+    private String writeOrchestraInstrumentedFraction(AcousticResultsSummary summary) throws IOException {
+        List<AcousticSweepPoint> pts = summary.bySweep("instrumented_fraction");
+        if (pts.isEmpty()) return saveEmptyOrchestraPlaceholder("instrumented_fraction");
+        List<Double> x = new ArrayList<>();
+        List<Double> tonal = new ArrayList<>();
+        List<Double> fence = new ArrayList<>();
+        for (AcousticSweepPoint p : pts) {
+            String label = p.label();
+            int pct = label.indexOf('%');
+            if (pct > 0) {
+                x.add(Double.parseDouble(label.substring(0, pct).trim()));
+            }
+            tonal.add(p.tonalProminenceDb());
+            fence.add(p.fenceLineDba());
+        }
+        XYChart chart = new XYChartBuilder()
+                .width(W).height(H)
+                .title("Fan Orchestra: Tonal Prominence vs. Instrumented Fraction")
+                .xAxisTitle("Fans with bow cells (%)")
+                .yAxisTitle("Metric value")
+                .build();
+        ChartStyle.applyXy(chart, ChartStyle.INDIGO, ChartStyle.TEAL);
+        chart.addSeries("tonal prominence (dB)", x, tonal);
+        chart.addSeries("fence-line SPL (dBA)", x, fence);
+        return save(chart, "acoustic_orchestra_instrumented_fraction.png");
+    }
+
+    private String writeOrchestraRackCount(AcousticResultsSummary summary) throws IOException {
+        List<AcousticSweepPoint> pts = summary.bySweep("rack_count");
+        if (pts.isEmpty()) return saveEmptyOrchestraPlaceholder("rack_count");
+        List<Double> racks = new ArrayList<>();
+        List<Double> fence = new ArrayList<>();
+        List<Double> baseline = new ArrayList<>();
+        for (AcousticSweepPoint p : pts) {
+            String label = p.label();
+            int space = label.indexOf(' ');
+            if (space > 0) {
+                racks.add(Double.parseDouble(label.substring(0, space).trim()));
+            }
+            fence.add(p.fenceLineDba());
+            baseline.add(p.baselineDba());
+        }
+        XYChart chart = new XYChartBuilder()
+                .width(W).height(H)
+                .title("Hall Scale: Fence-line SPL vs. Rack Count (15k instruments at 2500 racks)")
+                .xAxisTitle("Rack count")
+                .yAxisTitle("SPL (dBA)")
+                .build();
+        ChartStyle.applyXy(chart, ChartStyle.AMBER, ChartStyle.TEAL);
+        chart.addSeries("baseline fan noise", racks, baseline);
+        chart.addSeries("MSE + fan orchestra", racks, fence);
+        return save(chart, "acoustic_orchestra_rack_count.png");
+    }
+
+    private List<String> writeOrchestraBowCovers(AcousticResultsSummary summary) throws IOException {
+        List<AcousticSweepPoint> pts = summary.bySweep("bow_cover");
+        if (pts.isEmpty()) {
+            return List.of(saveEmptyOrchestraPlaceholder("bow_cover"));
+        }
+        List<String> labels = pts.stream().map(p -> p.label().replace(" cover", "")).toList();
+        List<Double> tonal = pts.stream().map(AcousticSweepPoint::tonalProminenceDb).toList();
+        List<Double> fence = pts.stream().map(AcousticSweepPoint::fenceLineDba).toList();
+        CategoryChart chart = new CategoryChartBuilder()
+                .width(W).height(H)
+                .title("Pickaso Cover Presets: Tonal Character at Fence Line")
+                .xAxisTitle("Bow wheel cover (simulated)")
+                .yAxisTitle("Tonal prominence (dB)")
+                .build();
+        ChartStyle.applyCategory(chart, ChartStyle.INDIGO);
+        chart.addSeries("tonal prominence", labels, tonal);
+        CategoryChart fenceChart = new CategoryChartBuilder()
+                .width(W).height(H)
+                .title("Pickaso Cover Presets: Fence-line SPL")
+                .xAxisTitle("Bow wheel cover (simulated)")
+                .yAxisTitle("SPL (dBA)")
+                .build();
+        ChartStyle.applyCategory(fenceChart, ChartStyle.TEAL);
+        fenceChart.addSeries("fence SPL", labels, fence);
+        return List.of(
+                saveCategory(chart, "acoustic_orchestra_bow_covers.png"),
+                saveCategory(fenceChart, "acoustic_orchestra_bow_covers_spl.png")
+        );
+    }
+
+    private String saveEmptyOrchestraPlaceholder(String name) throws IOException {
+        XYChart chart = new XYChartBuilder().width(W).height(H).title("No " + name + " sweep data").build();
+        return save(chart, "acoustic_orchestra_" + name + ".png");
     }
 
     private String save(XYChart chart, String filename) throws IOException {

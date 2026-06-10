@@ -25,3 +25,14 @@ mechanical_equalizer:
     use_chimney_draft: false
     waste_heat_to_air_fraction: 0.35
     chimney_height_m: 120
+  fan_orchestra:
+    enabled: true
+    instruments_per_fan: 1.0
+    instrumented_fraction: 1.0
+    instrument_type: rotary_bow
+    fundamental_hz: 110.0
+    semitone_spread: 24
+    bow_cover_cycle: tremobow,vase,curved
+    fan_to_bow_gear_ratio: 1.0
+    bpf_energy_reallocation: 0.12
+    statistical_voice_sample: 128

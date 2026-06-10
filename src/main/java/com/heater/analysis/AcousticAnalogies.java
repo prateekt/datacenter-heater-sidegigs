@@ -13,6 +13,7 @@ public final class AcousticAnalogies {
 
     public final String oneLiner;
     public final String disclaimer;
+    public final PickasoInfo pickaso;
     public final Map<String, String> concepts;
     public final List<QuestionAnswer> kidQuestions;
     public final List<String> steps;
@@ -20,12 +21,30 @@ public final class AcousticAnalogies {
 
     public record QuestionAnswer(String question, String answer) {}
 
+    public record PickasoMapping(String pickaso, String fanCell) {}
+
+    public record PickasoInfo(
+            String productName,
+            String videoUrl,
+            String productUrl,
+            String heroImage,
+            String tremobowImage,
+            String intro,
+            List<PickasoMapping> mapping
+    ) {}
+
     private AcousticAnalogies(
-            String oneLiner, String disclaimer, Map<String, String> concepts,
-            List<QuestionAnswer> kidQuestions, List<String> steps, List<String> honestLimits
+            String oneLiner,
+            String disclaimer,
+            PickasoInfo pickaso,
+            Map<String, String> concepts,
+            List<QuestionAnswer> kidQuestions,
+            List<String> steps,
+            List<String> honestLimits
     ) {
         this.oneLiner = oneLiner;
         this.disclaimer = disclaimer;
+        this.pickaso = pickaso;
         this.concepts = concepts;
         this.kidQuestions = kidQuestions;
         this.steps = steps;
@@ -51,10 +70,38 @@ public final class AcousticAnalogies {
         return new AcousticAnalogies(
                 String.valueOf(root.getOrDefault("one_liner", "")),
                 String.valueOf(root.getOrDefault("disclaimer", "")),
+                loadPickaso(root.get("pickaso")),
                 concepts,
                 questions,
                 stringList(root, "steps"),
                 stringList(root, "honest_limits")
+        );
+    }
+
+    private static PickasoInfo loadPickaso(Object obj) {
+        if (!(obj instanceof Map<?, ?> raw)) {
+            return new PickasoInfo("", "", "", "", "", "", List.of());
+        }
+        Map<String, Object> m = (Map<String, Object>) raw;
+        List<PickasoMapping> mapping = new ArrayList<>();
+        Object mapObj = m.get("mapping");
+        if (mapObj instanceof List<?> list) {
+            for (Object item : list) {
+                if (item instanceof Map<?, ?> row) {
+                    mapping.add(new PickasoMapping(
+                            String.valueOf(row.get("pickaso")),
+                            String.valueOf(row.get("fan_cell"))));
+                }
+            }
+        }
+        return new PickasoInfo(
+                String.valueOf(m.getOrDefault("product_name", "Pickaso Rotary Bow")),
+                String.valueOf(m.getOrDefault("video_url", "")),
+                String.valueOf(m.getOrDefault("product_url", "")),
+                String.valueOf(m.getOrDefault("hero_image", "")),
+                String.valueOf(m.getOrDefault("tremobow_image", "")),
+                String.valueOf(m.getOrDefault("intro", "")).trim(),
+                mapping
         );
     }
 

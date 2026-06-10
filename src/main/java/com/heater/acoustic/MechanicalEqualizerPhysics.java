@@ -16,6 +16,7 @@ public final class MechanicalEqualizerPhysics {
             WaterSoundscape.WaterResult water,
             OrganPipeArray.PipeResult pipes,
             AeolianElements.AeolianResult aeolian,
+            FanDrivenInstrumentField.InstrumentFieldResult fanOrchestra,
             double volumeFlowM3S,
             boolean thermallyCoupled
     ) {}
@@ -46,8 +47,11 @@ public final class MechanicalEqualizerPhysics {
         WaterSoundscape.WaterResult water = WaterSoundscape.compute(eqCfg, airflowBoost);
         OrganPipeArray.PipeResult pipes = OrganPipeArray.compute(eqCfg, volumeFlow, afterAtten, bpf);
         AeolianElements.AeolianResult aeolian = AeolianElements.compute(eqCfg, perimeterWind);
+        FanDrivenInstrumentField.InstrumentFieldResult orchestra = FanDrivenInstrumentField.compute(
+                spectrumCfg, eqCfg.fanOrchestra, afterAtten, bpf);
 
         double[] combined = ThirdOctaveBands.copy(afterAtten);
+        combined = ThirdOctaveBands.addIncoherent(combined, orchestra.lwPerBand());
         combined = ThirdOctaveBands.addIncoherent(combined, water.lwPerBand());
         combined = ThirdOctaveBands.addIncoherent(combined, pipes.lwPerBand());
         combined = ThirdOctaveBands.addIncoherent(combined, aeolian.lwPerBand());
@@ -63,6 +67,7 @@ public final class MechanicalEqualizerPhysics {
                 water,
                 pipes,
                 aeolian,
+                orchestra,
                 volumeFlow,
                 eqCfg.thermalCouplingEnabled
         );
@@ -85,24 +90,31 @@ public final class MechanicalEqualizerPhysics {
         return null;
     }
 
-    /** Synthesize perimeter waveform by mixing attenuated fan noise with water/pipe tones. */
+    /** Synthesize perimeter waveform: fan orchestra (primary) + attenuated fan bed + water/pipes. */
     public static double[] synthesizePerimeterWaveform(
             AcousticSpectrumConfig spectrumCfg,
             MseResult result,
+            MechanicalEqualizerConfig eqCfg,
             java.util.Random rng
     ) {
+        double[] orchestra = BowedStringSynthesizer.synthesizeField(
+                spectrumCfg, eqCfg.fanOrchestra, result.fanOrchestra(), rng);
+
         double[] fan = FanNoiseSpectrum.synthesizeWaveform(spectrumCfg, rng);
         int n = fan.length;
         double[] out = new double[n];
         double attenFactor = Math.pow(10.0, -result.metrics().reductionDba() / 20.0);
+        double fanBedGain = 0.25;
         for (int i = 0; i < n; i++) {
-            out[i] = fan[i] * Math.max(0.1, attenFactor);
+            out[i] = orchestra[Math.min(i, orchestra.length - 1)]
+                    + fan[i] * Math.max(0.05, attenFactor * fanBedGain);
         }
+
         double tStep = 1.0 / spectrumCfg.sampleRateHz;
         double waterAmp = result.water().overallDba() > -100
-                ? Math.pow(10.0, (result.water().overallDba() - 60.0) / 20.0) * 0.3 : 0;
+                ? Math.pow(10.0, (result.water().overallDba() - 60.0) / 20.0) * 0.15 : 0;
         double pipeAmp = result.pipes().musicalTonalContentDb() > -100
-                ? Math.pow(10.0, (result.pipes().musicalTonalContentDb() - 60.0) / 20.0) * 0.2 : 0;
+                ? Math.pow(10.0, (result.pipes().musicalTonalContentDb() - 60.0) / 20.0) * 0.1 : 0;
 
         for (int i = 0; i < n; i++) {
             double t = i * tStep;
@@ -111,6 +123,17 @@ public final class MechanicalEqualizerPhysics {
         }
         normalize(out, 0.9);
         return out;
+    }
+
+    /** Fan-orchestra aggregate only (MDMG / Java-LDM input). */
+    public static double[] synthesizeFanOrchestraWaveform(
+            AcousticSpectrumConfig spectrumCfg,
+            MseResult result,
+            MechanicalEqualizerConfig eqCfg,
+            java.util.Random rng
+    ) {
+        return BowedStringSynthesizer.synthesizeField(
+                spectrumCfg, eqCfg.fanOrchestra, result.fanOrchestra(), rng);
     }
 
     private static void normalize(double[] x, double peak) {

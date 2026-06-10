@@ -19,7 +19,11 @@ public final class AcousticResultsSummary {
             double mseCoupledDba,
             double mdmgSpectralDistance,
             double mdmgHarmonicity,
-            int mdmgSteps
+            int mdmgSteps,
+            int activeInstrumentCount,
+            double musicalContentDb,
+            double sustainIndex,
+            double tremoloDepthDb
     ) {}
 
     public AcousticResultsSummary() {
@@ -86,7 +90,11 @@ public final class AcousticResultsSummary {
             sb.append("\"mse_coupled_dba\":").append(fmt(referenceRuns.mseCoupledDba())).append(",");
             sb.append("\"mdmg_spectral_distance\":").append(fmt(referenceRuns.mdmgSpectralDistance())).append(",");
             sb.append("\"mdmg_harmonicity\":").append(fmt(referenceRuns.mdmgHarmonicity())).append(",");
-            sb.append("\"mdmg_steps\":").append(referenceRuns.mdmgSteps());
+            sb.append("\"mdmg_steps\":").append(referenceRuns.mdmgSteps()).append(",");
+            sb.append("\"active_instrument_count\":").append(referenceRuns.activeInstrumentCount()).append(",");
+            sb.append("\"musical_content_db\":").append(fmt(referenceRuns.musicalContentDb())).append(",");
+            sb.append("\"sustain_index\":").append(fmt(referenceRuns.sustainIndex())).append(",");
+            sb.append("\"tremolo_depth_db\":").append(fmt(referenceRuns.tremoloDepthDb()));
             sb.append("},\n");
         }
         sb.append("  \"points\": [\n");

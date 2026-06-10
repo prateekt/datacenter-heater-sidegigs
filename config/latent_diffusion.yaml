@@ -10,7 +10,7 @@ latent_diffusion:
   corpus_size: 32
   sample_rate_hz: 44100
   clip_duration_s: 2.0
-  default_prompt: "gentle acoustic piano 60 BPM calm fence-line soundscape"
+  default_prompt: "thousands of fan-driven bowed strings sustained tremolo data center orchestra"
   weights_path: models/score_network.bin
   beta_start: 0.0001
   beta_end: 0.02

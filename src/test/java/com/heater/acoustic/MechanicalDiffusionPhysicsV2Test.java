@@ -33,6 +33,25 @@ class MechanicalDiffusionPhysicsV2Test {
     }
 
     @Test
+    void orchestraInputImprovesHarmonicity() {
+        AcousticSpectrumConfig spec = new AcousticSpectrumConfig();
+        spec.sampleRateHz = 44100;
+        spec.clipDurationS = 1.0;
+        Random rng = new Random(5);
+
+        double[] fan = FanNoiseSpectrum.synthesizeWaveform(spec, rng);
+        double[] orchestra = BowedStringSynthesizer.synthesizeField(spec, new FanOrchestraConfig(), rng);
+
+        MdmgLandscapeConfig cfg = new MdmgLandscapeConfig();
+        cfg.reverseSteps = 15;
+
+        var fromFan = MechanicalDiffusionPhysicsV2.denoise(fan, cfg, rng);
+        var fromOrch = MechanicalDiffusionPhysicsV2.denoise(orchestra, cfg, new Random(5));
+
+        assertTrue(fromOrch.harmonicity() >= fromFan.harmonicity() * 0.9);
+    }
+
+    @Test
     void v2ProducesStableOutput() {
         MdmgLandscapeConfig cfg = new MdmgLandscapeConfig();
         cfg.diagonalK = new double[] {0.05, 0.06, 0.07, 0.08};

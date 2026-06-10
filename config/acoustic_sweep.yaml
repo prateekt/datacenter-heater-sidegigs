@@ -27,6 +27,21 @@ coupling_modes:
   - decoupled
   - chimney_coupled
 
+instrumented_fractions:
+  - 0.1
+  - 0.5
+  - 1.0
+
+rack_counts:
+  - 500
+  - 2500
+  - 5000
+
+bow_covers:
+  - tremobow
+  - vase
+  - curved
+
 spectrum_defaults: config/acoustic_spectrum.yaml
 equalizer_defaults: config/mechanical_equalizer.yaml
 diffusion_defaults: config/mechanical_diffusion.yaml

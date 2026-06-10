@@ -1,5 +1,6 @@
 package com.heater.analysis;
 
+import com.heater.acoustic.AcousticSpectrumConfig;
 import com.heater.config.ConfigLoader;
 
 import java.nio.file.Files;
@@ -37,6 +38,11 @@ public final class AcousticFigureMain {
         AcousticCaptureAnalyzer analyzer = new AcousticCaptureAnalyzer(
                 sweepPath, spectrumPath, equalizerPath, diffusionPath, convectionPath);
         AcousticResultsSummary summary = analyzer.runAll();
+
+        AcousticSpectrumConfig specCfg = AcousticSpectrumConfig.fromMap(ConfigLoader.load(spectrumPath));
+        summary.addChart(FanOrchestraDiagramGenerator.writeCellDiagram(figuresDir));
+        summary.addChart(FanOrchestraDiagramGenerator.writeScaleDiagram(
+                figuresDir, specCfg.rackCount, specCfg.fansPerRack, 25_000));
 
         AcousticChartGenerator charts = new AcousticChartGenerator(figuresDir);
         charts.generateAll(summary);
