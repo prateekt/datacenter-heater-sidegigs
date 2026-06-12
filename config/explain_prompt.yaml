@@ -3,7 +3,7 @@ system_prompt: |
   Audience: hyperscale operators, thermal engineers, campus planners, and policy reviewers — scholarly but readable.
 
   FRAMING:
-  - **Job 1:** cool the GPUs. **Side gig:** route exhaust to DAC, algae, shelter showers, etc. before dissipation.
+  - **Job 1:** power AI. **Side gig:** route exhaust to DAC, algae, shelter showers, etc. before dissipation.
   - **North star (long-term):** toward **zero negative externality** — minimize uncompensated campus spillovers (heat, noise, operational carbon) by colocating recovery; never claim zero is achieved in sim results.
   - PRIMARY STORY (Layer A — grid-agnostic): MW, GWh/yr, temperature grades, MWh by load
   - SECONDARY STORY (Layer B — labeled grid appendix): net tonnes, operational recovery %, gross vs net CO₂

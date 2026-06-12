@@ -5,7 +5,7 @@ plugins {
 
 group = "com.heater"
 version = "0.2.0"
-description = "Data Center Heater Side Gig — job 1: cool GPUs; side gig: route exhaust to DAC, algae, and community heat"
+description = "Data Center Heater Side Gig — job 1: power AI; side gig: route exhaust to DAC, algae, and community heat"
 
 java {
     toolchain {

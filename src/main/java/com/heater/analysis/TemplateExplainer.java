@@ -14,7 +14,7 @@ public final class TemplateExplainer {
         StringBuilder sb = new StringBuilder();
 
         sb.append("## Side gig results: what hyperscale exhaust can do\n\n");
-        sb.append("*Auto-generated results for **Data Center Heater Side Gig** — **job 1** cools the GPUs; ")
+        sb.append("*Auto-generated results for **Data Center Heater Side Gig** — **job 1** powers AI; ")
                 .append("the **side gig** routes that exhaust to DAC, algae, shelter showers, and more before dissipation. ")
                 .append("We quantify MW, GWh/yr, and temperature grades (grid-agnostic). ")
                 .append("Grid-dependent carbon accounting is in the [appendix](#appendix-grid-dependent-carbon-scenario).*\n\n");
@@ -102,7 +102,7 @@ public final class TemplateExplainer {
 
     private static void appendThesis(StringBuilder sb) {
         sb.append("### Thesis\n\n");
-        sb.append("> Data centers are giant heaters. **Job 1** is cooling the GPUs; the **side gig** is putting ")
+        sb.append("> Data centers are giant heaters. **Job 1** is powering AI; the **side gig** is putting ")
                 .append("that exhaust to work before it's thrown away. We do not assume clean electricity — we quantify ")
                 .append("the **output-side thermodynamic potential**: how much heat is produced, what temperatures are ")
                 .append("available, and which downstream loads can use it.\n\n");
